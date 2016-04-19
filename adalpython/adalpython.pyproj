@@ -24,23 +24,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="adalpython.py" />
-    <Compile Include="argument.py" />
-    <Compile Include="authentication_context.py" />
-    <Compile Include="authority.py" />
     <Compile Include="Client.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="constants.py" />
+    <Compile Include="httpclient.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="log.py" />
-    <Compile Include="oauth2_client.py" />
     <Compile Include="Storage.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="token_request.py" />
-    <Compile Include="util.py" />
-    <Compile Include="wstrust_request.py" />
-    <Compile Include="wstrust_response.py" />
-    <Compile Include="xmlutil.py" />
     <Compile Include="__init__.py">
       <SubType>Code</SubType>
     </Compile>
