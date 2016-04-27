@@ -2,7 +2,8 @@ from .httpclient import httpclient
 import jwt
 import urllib
 import webbrowser
-from urllib.parse import unquote, urlparse, urlencode, ParseResult
+from urllib.parse import unquote, urlparse, urlencode, ParseResult, parse_qsl
+import json
 """description of class"""
     
 """ Need to add licensing terms here 
@@ -21,7 +22,7 @@ class Client(object):
      self._auth_end_point = _DefaultValues.auth_end_point
      self._resource = _DefaultValues.resource
      self._auth_flow = _DefaultValues.auth_flow
-     self._client_secret = _DefaultValues.client_secret
+     self._clientsecret = _DefaultValues._clientsecret
      self._redirecturi = _DefaultValues.redirecturi
      self._clientid = _DefaultValues.client_id
  
@@ -34,10 +35,10 @@ class Client(object):
       promptlogin(bool,optional) : Whether to prompt for login or use existing session.
      
      '''
-    def authrequest(self,promptlogin = False,stateparams=[], extraparams=[]):
+    def authrequest(self,requesttype,promptlogin = False,stateparams=[], extraparams=[]):
         try:
-         url = "https://login.microsoftonline.com/common/oauth2/authorize"
-         params = self.get_authrequest_parameters(stateparams,extraparams)
+         url = self.get_login_url()
+         params = self.get_authrequest_parameters(requesttype,promptlogin,stateparams,extraparams)
          url = self.add_url_params(url,params)
         except Exception as ex:
          return ex.args[0]
@@ -51,8 +52,25 @@ class Client(object):
       A dictionary with the following keys: 'IDToken' object, 'token parameters', 'stored state parameters'.
      
     '''
-    def handle_auth_response(authparams):
-     return ""
+    def handle_auth_response(self,authparams):
+     params = {'grant_type':'authorization_code'}
+     try:
+        if authparams['id_token'] is not None:
+         res = {'id_token': authparams['id_token']}
+         return res
+     except:
+            params['code'] = authparams['code']
+
+     url = "https://login.microsoftonline.com/common/oauth2/token"
+     
+     params['client_id'] = self.get_clientid()
+     params['client_secret'] = self.get_clientsecret()
+     params['code'] = authparams['code']
+     params['redirect_uri'] = self.get_redirecturi()
+     httpClient = httpclient()
+     response = httpClient.post(url,params)
+     res = json.loads(response.content.decode('UTF-8'))
+     return res
 
     '''/**
      * Process and return idtoken.
@@ -73,8 +91,10 @@ class Client(object):
      * @return array Received parameters.
      */
      '''
-    def tokenrequest(code):
+    def tokenrequest(self,code):
+     
      return ""
+     
 
     '''
 /**
@@ -154,13 +174,23 @@ class Client(object):
     def get_authflow(self):
        return self._authflow
 
-    def get_authrequest_parameters(self, stateparams, extraparams):
+    def get_authrequest_parameters(self,requesttype,promptlogin, stateparams, extraparams):
         params = {'scope':'openid'}
         params['client_id'] = self.get_clientid()
         params['redirect_uri'] = self.get_redirecturi()
-        params['response_type'] = 'code'
+        if requesttype == 'code' :
+            params['response_type'] = 'code'
+        else:
+           if requesttype == 'code id_token':
+            params['response_type'] = 'code id_token'
+            params['nonce'] = '7Yfsaoier-oiuaoisudf'
+           else:
+            raise ValueError('Response type should be either \'code\' or \'code id_token\'.')
         params['response_mode'] = 'form_post'
         params['resource'] = self.get_resource()
+        if promptlogin is True:
+            params['prompt'] = 'login'
+
         if stateparams is not None :
             stateparam = ''
             for state in stateparams:
@@ -170,6 +200,13 @@ class Client(object):
             for extra in extraparams:
                 params[extra] = extra
         return params
+
+    def get_login_url(self):
+        if self._auth_end_point is None:
+            return  "https://login.microsoftonline.com/common/oauth2/authorize"
+        else:
+            return self.get_auth_end_point()
+        
 
     def add_url_params(self,url, params):
      """ Add GET params to provided URL being aware of existing.
@@ -218,7 +255,7 @@ class _DefaultValues:
     auth_end_point = 'https://login.microsoftonline.com/common/oauth2/authorize'
     auth_flow = 'code'
     redirecturi = 'http://localhost'
-    client_secret =''
+    _clientsecret =''
     # This client is common to all tenants.  It is used by the Azure XPlat tools and is used for
     # username password logins.
     client_id = '04b07795-8ddb-461a-bbee-02f9e1bf7b46'
