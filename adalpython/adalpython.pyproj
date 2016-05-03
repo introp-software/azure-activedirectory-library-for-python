@@ -24,6 +24,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="adalpython.py" />
+    <Compile Include="argument.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Client.py">
       <SubType>Code</SubType>
     </Compile>

@@ -4,17 +4,11 @@ import urllib
 import webbrowser
 from urllib.parse import unquote, urlparse, urlencode, ParseResult, parse_qsl
 import json
+from adalpython import argument
+import adalpython
 """description of class"""
     
 """ Need to add licensing terms here 
-
-    Methods to be exposed:
-    1. authrequest
-    2. handle_auth_response
-    3. process_idtoken
-    4. tokenrequest
-    5. handle_idtoken
-    6. rocredsrequest
 """
 class Client(object):
         
@@ -32,10 +26,10 @@ class Client(object):
      Args:
       stateparams(List,optional) : Parameters to store as state.
       extraparams(List,optional) : Additional parameters to send with the OIDC request.
-      promptlogin(bool,optional) : Whether to prompt for login or use existing session.
      
      '''
     def authrequest(self,requesttype,promptlogin = False,stateparams=[], extraparams=[]):
+        validate_string_param(requesttype,'Request Type')
         try:
          url = self.get_login_url()
          params = self.get_authrequest_parameters(requesttype,promptlogin,stateparams,extraparams)
@@ -81,31 +75,7 @@ class Client(object):
      */'''
     def process_idtoken(self,idtoken, expectednonce = ''):
         details = jwt.decode(idtoken,False,None,None)
-        return details
-
-    '''
-  /**
-     * Exchange an authorization code for an access token.
-     *
-     * @param string $code An authorization code.
-     * @return array Received parameters.
-     */
-     '''
-    def tokenrequest(self,code):
-     
-     return ""
-     
-
-    '''
-/**
-     * Handle auth response.
-     *
-     * @param array $authparams Array of received auth response parameters.
-     * @return array List of IDToken object, array of token parameters, and stored state parameters.
-     */
-     '''
-    def handle_id_token(authparams):
-     return ""
+        return details     
 
     '''
 /**
@@ -117,26 +87,16 @@ class Client(object):
      */
      '''
     def rocredsrequest(self,username, password):
-        url = "https://login.microsoftonline.com/common/oauth2/token"
+        url = _DefaultValues.token_uri
         parameters = {'grant_type':'password','scope':'openid profile email'}
         parameters['client_id'] = self._clientid
         parameters['client_secret'] = self._clientsecret
         parameters['resource'] = self._resource
         parameters['username'] = username
         parameters['password'] = password
-        client = httpclient()
+        client = self.get_httpClient()
         res = client.post(url,parameters)
         return res
-
-    '''
-1. AuthorizationEndPoint
-2. ClientId
-3. ClientSecret
-4. RedirectURI
-5. Resource
-6. AuthFlow - Code or Code Access_Token
-7. 
-'''
 
     def set_auth_end_point(self, value):
        self._auth_end_point = value
@@ -173,6 +133,12 @@ class Client(object):
     
     def get_authflow(self):
        return self._authflow
+
+    def get_httpClient(self):
+       return self._httpClient
+
+    def set_httpClient(self, value):
+       self._httpClient = value
 
     def get_authrequest_parameters(self,requesttype,promptlogin, stateparams, extraparams):
         params = {'scope':'openid'}
@@ -214,13 +180,7 @@ class Client(object):
      :param url: string of target URL
      :param params: dict containing requested params to be added
      :return: string with updated URL
-
-     >> url = 'http://stackoverflow.com/test?answers=true'
-     >> new_params = {'answers': False, 'data': ['some','values']}
-     >> add_url_params(url, new_params)
-     'http://stackoverflow.com/test?data=some&data=values&answers=false'
-     """
-     # Unquoting URL first so we don't loose existing args
+    """
      url = unquote(url)
      # Extracting url info
      parsed_url = urlparse(url)
@@ -259,3 +219,4 @@ class _DefaultValues:
     # This client is common to all tenants.  It is used by the Azure XPlat tools and is used for
     # username password logins.
     client_id = '04b07795-8ddb-461a-bbee-02f9e1bf7b46'
+    token_uri = "https://login.microsoftonline.com/common/oauth2/token"
