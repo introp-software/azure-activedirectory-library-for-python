@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+	<script src="{{ url_for('static', filename='Scripts/w3data.js')}}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/Site.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/my-jquery-ui.css')}}" />
+	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery-2.1.4.min.js')}}"/>
+<script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery-ui.min.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery.easing.min.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery.validate.min.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='Scripts/modernizr-2.8.3.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='Scripts/bootstrap.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='Scripts/respond.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='Scripts/grayscale.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery-ui.js')}}"></script>
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/bootstrap.css')}}"></link>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/site.css')}}"></link>
+<link rel="stylesheet" type="tex/css" href="{{ url_for('static', filename='Content/grayscale.css')}}"></link>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/font-awesome.min.css')}}"></link>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/google_font_lora.css')}}"></link>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/google_font_montserrat.css')}}"></link>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/home.css')}}"></link>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/signin.css')}}"></link>
+<link rel="stylesheet" type="tex/css" href="{{ url_for('static', filename='Content/jquery-ui.min.css')}}"></link>
+<style type="text/css" >
+/*----- Tabs -----*/
+	.tabs {
+		width:100%;
+		display:inline-block;
+	}
+ 
+    /*----- Tab Links -----*/
+    /* Clearfix */
+    .tab-links:after {
+        display:block;
+        clear:both;
+        content:'';
+    }
+ 
+    .tab-links li {
+        margin:0px 5px;
+        float:left;
+        list-style:none;
+    }
+ 
+        .tab-links a {
+            padding:9px 15px;
+            display:inline-block;
+            border-radius:3px 3px 0px 0px;
+            background:#7FB5DA;
+            font-size:16px;
+            font-weight:600;
+            color:#4c4c4c;
+            transition:all linear 0.15s;
+        }
+ 
+        .tab-links a:hover {
+            background:#a7cce5;
+            text-decoration:none;
+        }
+ 
+    li.active a, li.active a:hover {
+        background:#fff;
+        color:#4c4c4c;
+    }
+ 
+    /*----- Content of Tabs -----*/
+    .tab-content {
+        padding:15px;
+        border-radius:3px;
+        box-shadow:-1px 1px 1px rgba(0,0,0,0.15);
+        background:#fff;
+    }
+ 
+	.tab {
+		display:none;
+	}
+ 
+	.tab.active {
+		display:block;
+	}
+</style>
+    <title></title>
+</head>
+
+<body id="page-top" >
+	<script type="text/javascript">
+$(function() {
+	$(".tabs").tabs();    
+});
+</script>
+    <!-- Navigation -->
+    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+              
+
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+                <ul class="nav navbar-nav">
+                    <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li>
+                        <a class="page-scroll navbar-normal" href="/#about">About</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll navbar-normal" href="/#contact">Contact</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll navbar-normal" href="/admin/users">Users</a>
+                    </li>                    
+                    <li>
+                        <a class="page-scroll navbar-em" href="/Account/SignIn">Sign In</a>
+                    </li>
+                   
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Body -->
+   <h2>SignIn</h2>
+
+<div class="container-fluid">
+    <div class="row">
+        <center>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <p class="brand">tdlr;</p>			
+					
+					<div class="tabs">
+						<ul class="tab-links">
+							<li class="active"><a href="#tab1">Using Credentials</a></li>
+							<li><a href="#tab2">Using Auth Code</a></li>
+							<li><a href="#tab3">Hybrid</a></li>
+						</ul>
+						<div id="tab1" class="tab active">
+							<form role="form" method="POST" action=".">
+								<div class="form-group">
+									<input type="email" name="username" id="username" class="form-control input-sm" placeholder="Email Address">
+								</div>
+								<div class="form-group">
+									<input type="password" name="password" id="password" class="form-control input-sm" placeholder="Password">
+								</div>
+								<div class="form-group" id="aad-button">
+									<a class="btn btn-block btn-msft" href="/Account/SignIn/AAD?redirectUri=/tasks"><img src="~/img/microsoft-icon.png" class="msft-icon" />Sign in with your Work or School account</a>
+								</div>
+								<input type="submit" value="Sign in" class="btn btn-block btn-em">
+								<div class="form-group help container">
+									<div class="row">
+										<a class="help col-sm-5" href="/">Sign Up</a>
+										<a class="help col-sm-5" href="/Account/ForgotPassword">Forgot Password?</a>
+									</div>
+								</div>
+							</form>
+						</div>
+						
+						<div id="tab2" class="tab">
+							<h3> AUTH CODE </h3>
+							<form method="POST" action="./usecode">
+								<input type="submit" name="currentsession" value="Use current session"/>
+								<input type="submit" name="usenewsession" value="Use new session"/>
+							</form>
+						</div>
+						
+						<div id="tab3" class="tab">
+							<h3> ID TOKEN </h3>
+							<form method="POST" action="./hybrid">
+								<input type="submit" name="currentsession" value="Use current session"/>
+								<input type="submit" name="usenewsession" value="Use new session"/>
+							</form>
+						</div>
+				</div>
+              </div>
+            </div>
+        </center>
+    </div>
+</div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p>Copyright &copy; Azure Active Directory DevEx</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

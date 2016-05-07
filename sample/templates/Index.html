@@ -1,0 +1,119 @@
+<html>
+<head>
+   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/Site.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/my-jquery-ui.css')}}" />
+	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery-2.1.4.min.js')}}"/>
+	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery-ui.min.js')}}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery.easing.min.js')}}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery.validate.min.js')}}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/modernizr-2.8.3.js')}}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/bootstrap.js')}}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/respond.js')}}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/grayscale.js')}}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery-ui.js')}}"></script>
+	
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/bootstrap.css')}}"></link>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/site.css')}}"></link>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/grayscale.css')}}"></link>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/font-awesome.min.css')}}"></link>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/google_font_lora.css')}}"></link>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/google_font_montserrat.css')}}"></link>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/home.css')}}"></link>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/signin.css')}}"></link>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/jquery-ui.min.css')}}"></link>
+
+    <style type="text/css">
+        .nav-link{
+            color: #fff;
+        }
+        .navbar a{
+            text-shadow: none !important;
+        }
+        .color-pink{
+            color: lightcoral;
+        }
+    </style>
+</head>
+<body data-spy="scroll" background={{ url_for('static', filename='img/intro-bg.jpg')}} >
+    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+        <div class="container">
+
+            <div class="navbar-header">
+                <a class="navbar-brand" href="./index1.html">Python AAD Sample App</a>
+            </div>
+            <div id="navbar">
+                <ul class="nav navbar-nav pull-right">
+                    <li><a href="/#about" class="nav-link page-scroll navbar-normal">About</a></li>
+                    <li><a href="/#contact" class="nav-link page-scroll navbar-normal">Contact</a></li>
+                    <li><a href="/login" class="nav-link color-pink page-scroll navbar-normal">Sign In</a></li>
+                   
+                </ul>
+            </div>
+        </div>
+    </nav>
+   <center>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>Select authorization flow and sign in:</p>
+                <div id="tabs">
+                    <ul>
+                        <li><a href="#tabs-1" class="btn">Auth Code</a></li>
+                        <li><a href="#tabs-2" class="btn">Hybrid</a></li>
+                        <li><a href="#tabs-3" class="btn">Credentials</a></li>
+                        <li><a href="#tabs-4" class="btn">Local </a></li>
+                    </ul>
+                    <div id="tabs-1">
+					    <form method="POST" action="./usecode">
+                        <div class="form-group">
+                            <a class="btn btn-block btn-msft" href="#" onclick="$(this).closest('form').submit()" role="button"><img src="{{ url_for('static', filename='img/microsoft-icon.png')}}" class="msft-icon">Sign in with your Work or School account</a>
+                        </div>
+						</form>
+                    </div>
+                    <div id="tabs-2">
+					<form method="POST" action="./hybrid">
+                        <div class="form-group">
+                            <a class="btn btn-block btn-msft" href="#" onclick="$(this).closest('form').submit()" role="button"><img src="{{ url_for('static', filename='img/microsoft-icon.png')}}" class="msft-icon">Sign in with your Work or School account</a>
+                        </div>
+					</form>
+                    </div>
+                    <div id="tabs-3">
+                        <form role="form" method="POST" action=".">
+                            <fieldset>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="Email">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-block btn-em">Login</button>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div id="tabs-4">
+                        <form action="signin.php?local=1" method="post">
+                            <fieldset>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="localemail" name="localemail" placeholder="Email">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" id="localpassword" name="localpassword" placeholder="Password">
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-block btn-em">Login</button>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </center>
+<script>
+    $(function () {
+        $("#tabs").tabs();
+    });
+</script>
+</body>
+</html>

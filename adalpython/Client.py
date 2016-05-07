@@ -6,6 +6,12 @@ from urllib.parse import unquote, urlparse, urlencode, ParseResult, parse_qsl
 import json
 from adalpython import argument
 import adalpython
+from uuid import uuid1
+from adalpython.argument import validate_string_param
+import random
+from string import ascii_lowercase
+from adalpython.Storage import Storage
+from random import choice
 """description of class"""
     
 """ Need to add licensing terms here 
@@ -19,6 +25,8 @@ class Client(object):
      self._clientsecret = _DefaultValues._clientsecret
      self._redirecturi = _DefaultValues.redirecturi
      self._clientid = _DefaultValues.client_id
+     self._httpClient = None
+     self._storage = None
  
     '''
      Perform an authorization request by redirecting resource owner's user agent to auth endpoint.
@@ -32,7 +40,7 @@ class Client(object):
         validate_string_param(requesttype,'Request Type')
         try:
          url = self.get_login_url()
-         params = self.get_authrequest_parameters(requesttype,promptlogin,stateparams,extraparams)
+         params = self._get_authrequest_parameters(requesttype,promptlogin,stateparams,extraparams)
          url = self.add_url_params(url,params)
         except Exception as ex:
          return ex.args[0]
@@ -55,13 +63,20 @@ class Client(object):
      except:
             params['code'] = authparams['code']
 
-     url = "https://login.microsoftonline.com/common/oauth2/token"
+     url = _DefaultValues.token_uri
      
-     params['client_id'] = self.get_clientid()
-     params['client_secret'] = self.get_clientsecret()
+     nonce = self._get_nonce_from_state(authparams['state'])
+
+     if nonce is None:
+         raise ValueError("Invalid state")
+
+
+
+     params['client_id'] = self._get_clientid()
+     params['client_secret'] = self._get_clientsecret()
      params['code'] = authparams['code']
-     params['redirect_uri'] = self.get_redirecturi()
-     httpClient = httpclient()
+     params['redirect_uri'] = self._get_redirecturi()
+     httpClient = self._get_httpClient()
      response = httpClient.post(url,params)
      res = json.loads(response.content.decode('UTF-8'))
      return res
@@ -94,56 +109,58 @@ class Client(object):
         parameters['resource'] = self._resource
         parameters['username'] = username
         parameters['password'] = password
-        client = self.get_httpClient()
+        client = self._get_httpClient()
         res = client.post(url,parameters)
         return res
 
     def set_auth_end_point(self, value):
        self._auth_end_point = value
     
-    def get_auth_end_point(self):
+    def _get_auth_end_point(self):
        return self._auth_end_point
     
     def set_clientid(self, value):
        self._clientid = value
     
-    def get_clientid(self):
+    def _get_clientid(self):
        return self._clientid
     
     def set_clientsecret(self, value):
        self._clientsecret = value
     
-    def get_clientsecret(self):
+    def _get_clientsecret(self):
        return self._clientsecret
     
     def set_redirecturi(self, value):
        self._redirecturi = value
     
-    def get_redirecturi(self):
+    def _get_redirecturi(self):
        return self._redirecturi
     
     def set_resource(self, value):
        self._resource = value
     
-    def get_resource(self):
+    def _get_resource(self):
        return self._resource
     
     def set_authflow(self, value):
        self._authflow = value
     
-    def get_authflow(self):
+    def _get_authflow(self):
        return self._authflow
 
-    def get_httpClient(self):
+    def _get_httpClient(self):
+       if self._httpClient is None:
+           self._httpClient = httpclient()
        return self._httpClient
 
     def set_httpClient(self, value):
        self._httpClient = value
 
-    def get_authrequest_parameters(self,requesttype,promptlogin, stateparams, extraparams):
+    def _get_authrequest_parameters(self,requesttype,promptlogin, stateparams, extraparams):
         params = {'scope':'openid'}
-        params['client_id'] = self.get_clientid()
-        params['redirect_uri'] = self.get_redirecturi()
+        params['client_id'] = self._get_clientid()
+        params['redirect_uri'] = self._get_redirecturi()
         if requesttype == 'code' :
             params['response_type'] = 'code'
         else:
@@ -153,15 +170,19 @@ class Client(object):
            else:
             raise ValueError('Response type should be either \'code\' or \'code id_token\'.')
         params['response_mode'] = 'form_post'
-        params['resource'] = self.get_resource()
+        params['resource'] = self._get_resource()
+        nonce = self._get_nonce()
+        params['nonce'] = nonce
+        state = self._get_new_state(nonce,stateparams)
         if promptlogin is True:
             params['prompt'] = 'login'
 
-        if stateparams is not None :
-            stateparam = ''
-            for state in stateparams:
-              stateparam = stateparam +"," + state
-            params['state'] = stateparam
+        stateparam = ''
+        if stateparams is not None :            
+         for stateitem in stateparams:
+          stateparam = stateparam +"," + stateitem
+            
+        params['state'] = stateparam + state
         if extraparams is not None:
             for extra in extraparams:
                 params[extra] = extra
@@ -171,8 +192,40 @@ class Client(object):
         if self._auth_end_point is None:
             return  "https://login.microsoftonline.com/common/oauth2/authorize"
         else:
-            return self.get_auth_end_point()
+            return self._get_auth_end_point()
         
+    def _get_nonce(self):
+        nonce = uuid1().hex.replace("-","")
+        nonce = nonce+ self._get_random_string(40)
+        return nonce
+
+
+    def _get_new_state(self, nonce,additionalparam):
+       state = self._get_random_string(15)
+       storage = self._get_storage()
+       storage.store_state(state,nonce,additionalparam)
+       return state
+
+    def _get_nonce_from_state(self,state):
+       storage = self._get_storage()
+       return storage.get_state(state)
+
+    def _delete_state(self,state):
+       storage = self._get_storage()
+       storage.delete_state(state)
+
+    def _get_random_string(self,length):
+       return (''.join(choice(ascii_lowercase) for i in range(length)))
+
+    def _get_storage(self):
+        if self._storage is None:
+            self._storage = Storage()
+            self._storage.set_dbfile(self._storage_location)
+           
+        return self._storage
+
+    def set_storage_location(self,value):
+        self._storage_location = value
 
     def add_url_params(self,url, params):
      """ Add GET params to provided URL being aware of existing.
