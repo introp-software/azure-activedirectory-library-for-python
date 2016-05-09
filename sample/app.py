@@ -1,13 +1,27 @@
 from flask import Flask, render_template, request
 from adalpython import Client
 import json
+from flask import current_app
 
 app = Flask(__name__)
+
+app.config.from_pyfile('config.py')
+
+#Configuration values, accessible across module.
+secret_key = ''
+client_id = ''
+client_secret = ''
+resource = ''
+storage_location = ''
+redirect_uri = ''
 
 
 @app.route("/")
 def my_form():
-    return render_template("index1.html")
+    try:
+     return render_template("index1.html")
+    except Exception as e:
+     return e
 
 
 @app.route("/login")
@@ -19,12 +33,11 @@ def my_form_post():
     username = request.form['username']
     password = request.form['password']
     try:
-        # print(help(adal))
-        # 'https://login.microsoftonline.com/common'
+        read_configuration()
         client = Client()
-        client.set_clientid('445d81db-d520-4e5e-8713-ffedcb7ab79f')
-        client.set_clientsecret('SmDf3Vn4xHcDBlrbOMwufPckAFymWFSfIWLKX4rrMpE=')
-        client.set_resource('https://graph.windows.net')
+        client.set_clientid(client_id)
+        client.set_clientsecret(client_secret)
+        client.set_resource(resource)
         token_response = client.rocredsrequest(username, password)
         res = json.loads(token_response.content.decode('UTF-8'))
         access_token = res['access_token']
@@ -44,6 +57,7 @@ def my_form_post():
 def authcode():
     try:
         client = Client()
+        read_configuration()
         authResponse = {}
 
         try:
@@ -56,10 +70,10 @@ def authcode():
 
         authResponse['state'] = request.form['state']
         authResponse['session_state'] = request.form['session_state']
-        client.set_redirecturi("http://localhost:5000/authcode")
-        client.set_clientid('445d81db-d520-4e5e-8713-ffedcb7ab79f')
-        client.set_clientsecret('SmDf3Vn4xHcDBlrbOMwufPckAFymWFSfIWLKX4rrMpE=')
-        client.set_storage_location("G:\\Dev\\FlaskApp\\test.sqlite")
+        client.set_redirecturi(redirect_uri)
+        client.set_clientid(client_id)
+        client.set_clientsecret(client_secret)
+        client.set_storage_location(storage_location)
         tokendetails = client.handle_auth_response(authResponse)
         id_token = tokendetails['id_token']
         token_details = client.process_idtoken(id_token)
@@ -75,11 +89,12 @@ def authcode():
 @app.route("/usecode", methods= ["POST"])
 def get_token_using_code():
     promptUserToLogin = False
+    read_configuration()
     client = Client()
-    client.set_clientid('445d81db-d520-4e5e-8713-ffedcb7ab79f')
-    client.set_redirecturi("http://localhost:5000/authcode")
-    client.set_resource("https://graph.windows.net")
-    client.set_storage_location("G:\\Dev\\FlaskApp\\test.sqlite")
+    client.set_clientid(client_id)
+    client.set_redirecturi(redirect_uri)
+    client.set_resource(resource)
+    client.set_storage_location(storage_location)
     client.authrequest('code',promptUserToLogin)
     return  ""
 
@@ -87,10 +102,21 @@ def get_token_using_code():
 def get_token_using_code_id_token():
     promptUserToLogin = False
     client = Client()
-    client.set_clientid('445d81db-d520-4e5e-8713-ffedcb7ab79f')
-    client.set_redirecturi("http://localhost:5000/authcode")
-    client.set_resource("https://graph.windows.net")
+    read_configuration()
+    client.set_clientid(client_id)
+    client.set_redirecturi(redirect_uri)
+    client.set_resource(resource)
     client.authrequest('code id_token',promptUserToLogin)
     return  ""
+
+def read_configuration():
+    global secret_key,client_id,client_secret,resource,storage_location,redirect_uri
+    secret_key = current_app.config['CLIENT_SECRET']
+    client_id = current_app.config['CLIENT_ID']
+    client_secret = current_app.config['CLIENT_SECRET'] 
+    resource = current_app.config['RESOURCE']
+    storage_location = current_app.config['STORAGE_LOCATION']
+    redirect_uri = current_app.config['REDIRECT_URI']
+
 if __name__ == "__main__":
     app.run()

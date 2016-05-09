@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0ca98b05-5514-4f4e-8616-9ea66a3bb828}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>app.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId />
+    <InterpreterVersion />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+    <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="app.py" />
+    <Compile Include="config.py" />
+    <Compile Include="model\user.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="storage.py">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="static\Content\bootstrap-theme.css" />
+    <Content Include="static\Content\bootstrap-theme.min.css" />
+    <Content Include="static\Content\bootstrap.css" />
+    <Content Include="static\Content\bootstrap.min.css" />
+    <Content Include="static\Content\font-awesome.css" />
+    <Content Include="static\Content\font-awesome.min.css" />
+    <Content Include="static\Content\google_font_lora.css" />
+    <Content Include="static\Content\google_font_montserrat.css" />
+    <Content Include="static\Content\grayscale.css" />
+    <Content Include="static\Content\home.css" />
+    <Content Include="static\Content\jquery-ui.min.css" />
+    <Content Include="static\Content\my-jquery-ui.css" />
+    <Content Include="static\Content\signin.css" />
+    <Content Include="static\Content\Site.css" />
+    <Content Include="static\Content\tasks.css" />
+    <Content Include="static\Content\users.css" />
+    <Content Include="static\fonts\fontawesome-webfont.svg" />
+    <Content Include="static\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="static\img\downloads-bg.jpg" />
+    <Content Include="static\img\intro-bg.jpg" />
+    <Content Include="static\img\microsoft-icon.png" />
+    <Content Include="static\Scripts\AadPickerLibrary.js" />
+    <Content Include="static\Scripts\bootstrap.js" />
+    <Content Include="static\Scripts\bootstrap.min.js" />
+    <Content Include="static\Scripts\detect_aad.js" />
+    <Content Include="static\Scripts\grayscale.js" />
+    <Content Include="static\Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="static\Scripts\jquery-2.1.4.intellisense.js" />
+    <Content Include="static\Scripts\jquery-2.1.4.js" />
+    <Content Include="static\Scripts\jquery-2.1.4.min.js" />
+    <Content Include="static\Scripts\jquery-ui.js" />
+    <Content Include="static\Scripts\jquery-ui.min.js" />
+    <Content Include="static\Scripts\jquery.easing.min.js" />
+    <Content Include="static\Scripts\jquery.validate.min.js" />
+    <Content Include="static\Scripts\modernizr-2.6.2.js" />
+    <Content Include="static\Scripts\modernizr-2.8.3.js" />
+    <Content Include="static\Scripts\respond.js" />
+    <Content Include="static\Scripts\respond.matchmedia.addListener.js" />
+    <Content Include="static\Scripts\respond.matchmedia.addListener.min.js" />
+    <Content Include="static\Scripts\respond.min.js" />
+    <Content Include="static\Scripts\task-form.js" />
+    <Content Include="static\Scripts\user-list.js" />
+    <Content Include="static\Scripts\w3data.js" />
+    <Content Include="static\Scripts\_references.js" />
+    <Content Include="templates\include.html" />
+    <Content Include="templates\Index - Copy.html" />
+    <Content Include="templates\Index.html" />
+    <Content Include="templates\Index1.html" />
+    <Content Include="templates\welcome.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="model\" />
+    <Folder Include="static\" />
+    <Folder Include="static\Content" />
+    <Folder Include="static\fonts" />
+    <Folder Include="static\img" />
+    <Folder Include="static\Scripts" />
+    <Folder Include="templates" />
+  </ItemGroup>
+  <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
+</Project>

@@ -1,0 +1,5 @@
+CLIENT_ID = "445d81db-d520-4e5e-8713-ffedcb7ab79f"
+CLIENT_SECRET = "SmDf3Vn4xHcDBlrbOMwufPckAFymWFSfIWLKX4rrMpE="
+RESOURCE = "https://graph.windows.net"
+STORAGE_LOCATION = "G:\\Dev\\FlaskApp\\test.sqlite"
+REDIRECT_URI = "http://localhost:5000/authcode"
