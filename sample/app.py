@@ -2,6 +2,9 @@ from flask import Flask, render_template, request
 from adalpython import Client
 import json
 from flask import current_app
+from storage import App_Storage
+
+
 
 app = Flask(__name__)
 
@@ -15,6 +18,22 @@ resource = ''
 storage_location = ''
 redirect_uri = ''
 
+class User(object):
+    """User object of application"""
+    def __init__(self):
+     Id = 0
+     FirstName = ''
+     LastName = ''
+     Email = ''
+     Password = ''
+    
+class Ad_user(object):
+    def __init__(self):
+     Id  = 0
+     User_Id = 0
+     Token = ''
+     Token_Type = ''
+     O365_Email = ''  
 
 @app.route("/")
 def my_form():
@@ -52,6 +71,27 @@ def my_form_post():
         message = template.format(type(ex).__name__, ex.args)
         return render_template('welcome.html', upn=message, firstname=message, lastname=message)
 
+
+@app.route("/register", methods=['POST'])
+def register():
+    try:
+        read_configuration()
+        email = request.form['email']
+        password = request.form['password']
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
+        user = User()
+        user.Email = email
+        user.FirstName = firstname
+        user.LastName = lastname
+        user.Password = password
+        storage = App_Storage()
+        user_id = storage.create_user(storage_location,user)
+        return render_template('welcome.html', upn=user_id, firstname=firstname, lastname=lastname)
+    except Exception as ex:
+        template = "An exception of type {0} occurred. Arguments:\n{1}"
+        message = template.format(type(ex).__name__, ex.args)
+        return render_template('welcome.html', upn=message, firstname=message, lastname=message)
 
 @app.route("/authcode", methods=['POST'])
 def authcode():
@@ -108,6 +148,21 @@ def get_token_using_code_id_token():
     client.set_resource(resource)
     client.authrequest('code id_token',promptUserToLogin)
     return  ""
+
+@app.route("/locallogin", methods = ["POST"])
+def locallogin():
+    try:
+     read_configuration()
+     username = request.form["localemail"]
+     password = request.form["localpassword"]
+     storage = App_Storage()
+     logged_in_user = storage.login_user(storage_location,username,password)
+     return render_template('welcome.html', upn=logged_in_user[0], firstname=logged_in_user[2], lastname=logged_in_user[3])
+    except Exception as ex:
+     template = "An exception of type {0} occurred. Arguments:\n{1}"
+     message = template.format(type(ex).__name__, ex.args)
+     return render_template('welcome.html', upn=message, firstname=message, lastname=message)
+
 
 def read_configuration():
     global secret_key,client_id,client_secret,resource,storage_location,redirect_uri

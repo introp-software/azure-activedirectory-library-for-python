@@ -12,7 +12,7 @@
     <OutputPath>.</OutputPath>
     <Name>adalpython</Name>
     <RootNamespace>adalpython</RootNamespace>
-    <PublishUrl>C:\Temp\adalpython</PublishUrl>
+    <PublishUrl>C:\Python34\Lib\site-packages\adalpython</PublishUrl>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
