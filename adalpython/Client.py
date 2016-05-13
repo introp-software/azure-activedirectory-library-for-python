@@ -166,7 +166,7 @@ class Client(object):
         else:
            if requesttype == 'code id_token':
             params['response_type'] = 'code id_token'
-            params['nonce'] = '7Yfsaoier-oiuaoisudf'
+            params['nonce'] = self._get_nonce()
            else:
             raise ValueError('Response type should be either \'code\' or \'code id_token\'.')
         params['response_mode'] = 'form_post'
@@ -178,9 +178,9 @@ class Client(object):
             params['prompt'] = 'login'
 
         stateparam = ''
-        if stateparams is not None :            
+        if len(stateparams) > 0 :            
          for stateitem in stateparams:
-          stateparam = stateparam +"," + stateitem
+          stateparam += stateitem +","
             
         params['state'] = stateparam + state
         if extraparams is not None:

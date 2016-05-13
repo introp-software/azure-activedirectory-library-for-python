@@ -79,6 +79,7 @@
     <Content Include="templates\Index - Copy.html" />
     <Content Include="templates\Index.html" />
     <Content Include="templates\Index1.html" />
+    <Content Include="templates\user.html" />
     <Content Include="templates\welcome.html" />
   </ItemGroup>
   <ItemGroup>
