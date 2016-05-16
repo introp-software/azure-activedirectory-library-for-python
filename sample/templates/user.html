@@ -48,9 +48,9 @@
             <br />
             <h1>Welcome to the Python AAD Sample App</h1>
             <br />
-            <h2>Hello, {{firstname}} {{lastname}}.</h2>
+            <h2>Hello, {{session['firstname']}}  {{session['lastname']}}.</h2>
             <br />
-            <h4>Email address: {{upn}}.</h4>
+            <h4>Email address: {{session['email']}}.</h4>
             <br />
             <h4>Connected accounts:</h4>
             <table class="table">
@@ -66,12 +66,10 @@
                         <td>
                             {% if aduser %}
                             <form action="./unlink" method="post">
-                                <input type="hidden" name="email" value="{{upn}}" />
                                 <a style="cursor:pointer" onclick="$(this).closest('form').submit()">Unlink</a>
                             </form>
                             {% else %}
                             <form action="./link" method="post">
-                                <input type="hidden" name="email" value="{{upn}}" />
                                 <a style="cursor:pointer" onclick="$(this).closest('form').submit()" >Link</a>
                             </form>
                             {% endif %}

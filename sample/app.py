@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, session
+from flask import Flask, render_template, request, session
 from adalpython import Client
 import json
 from flask import current_app
@@ -65,7 +65,10 @@ def my_form_post():
         firstname = token_details['given_name']
         lastname = token_details['family_name']
         upn = token_details['upn']
-        return render_template('user.html', upn=upn, firstname=firstname, lastname=lastname)
+        session['firstname'] =  firstname
+        session['lastname']= lastname
+        session['email'] = email
+        return render_template('user.html')
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1}"
         message = template.format(type(ex).__name__, ex.args)
@@ -87,7 +90,11 @@ def register():
         user.Password = password
         storage = App_Storage()
         user_id = storage.create_user(storage_location,user)
-        return render_template('user.html', upn=email, firstname=firstname, lastname=lastname)
+        session['firstname'] =  firstname
+        session['lastname']= lastname
+        session['email'] = email
+        session['userid'] = user_id
+        return render_template('user.html')
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1}"
         message = template.format(type(ex).__name__, ex.args)
@@ -120,7 +127,10 @@ def authcode():
         firstname = token_details['given_name']
         lastname = token_details['family_name']
         upn = token_details['upn']
-        return render_template('user.html', upn=upn, firstname=firstname, lastname=lastname)
+        session['firstname'] =  firstname
+        session['lastname']= lastname
+        session['email'] = upn
+        return render_template('user.html')
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1}"
         message = template.format(type(ex).__name__, ex.args)
@@ -155,14 +165,19 @@ def locallogin():
     try:
      read_configuration()
      username = request.form["localemail"]
-     password = request.form["localpassword"]
+     password = request.form["localpassword"]     
      storage = App_Storage()
      logged_in_user = storage.login_user(storage_location,username,password)
      try:
       ad_user = storage.get_ad_user(storage_location,logged_in_user[4])
      except LookupError:
       ad_user = None
-     return render_template('user.html', upn=logged_in_user[0], firstname=logged_in_user[2], lastname=logged_in_user[3], aduser = ad_user)
+
+     session['firstname'] =  logged_in_user[2]
+     session['lastname']= logged_in_user[3]
+     session['email'] = logged_in_user[0]
+     session['userid'] = logged_in_user[4]
+     return render_template('user.html', aduser = ad_user)
     except Exception as ex:
      template = "An exception of type {0} occurred. Arguments:\n{1}"
      message = template.format(type(ex).__name__, ex.args)
@@ -171,7 +186,7 @@ def locallogin():
 @app.route("/link", methods = ["POST"])
 def linkaccount():
     try:
-     email = request.form["email"]
+     email = session['email']
      promptUserToLogin = False
      client = Client()
      read_account_link_configuration()
@@ -212,8 +227,8 @@ def linkaccountresponse():
     upn = token_details['upn']
     state = authResponse['state']
     if state.lower().find(upn.lower()) != -1:
-     firstname = token_details['given_name']
-     lastname = token_details['family_name']
+     firstname = session['firstname']
+     lastname =  session['lastname']
      app_storage = App_Storage()
      user = app_storage.get_user_by_email(storage_location,upn)
      ad_user = Ad_user()
@@ -222,14 +237,20 @@ def linkaccountresponse():
      #ad_user.Token_Type = token_details['token_type']
      ad_user.O365_Email = upn
      app_storage.link_user(storage_location,user[4],ad_user)
-     return render_template('user.html', upn=upn, firstname=firstname, lastname=lastname,aduser=ad_user)
+     return render_template('user.html',aduser=ad_user)
     else:
      return render_template('user.html',error = "Your O365 email does not match with your current email id.")
    except Exception as ex:
     template = "An exception of type {0} occurred. Arguments:\n{1}"
     message = template.format(type(ex).__name__, ex.args)
-    return render_template('user.html', upn=message, firstname=message, lastname=message)
+    return render_template('user.html', error = message)
 
+@app.route("/unlink", methods = ["POST"])
+def unlinkaccount():
+    email = session['email']
+    app_storage = App_Storage()
+    app_storage.delink_user(storage_location,email)
+    return render_template('user.html')
 
 def read_configuration():
     global secret_key,client_id,client_secret,resource,storage_location,redirect_uri
@@ -250,6 +271,5 @@ def read_account_link_configuration():
     redirect_uri = current_app.config['LINK_REDIRECT_URI']
 
 if __name__ == "__main__":
-    app.secret_key = 'super secret key'
-    app.config['SESSION_TYPE'] = 'filesystem'
+    app.secret_key = 'oiqauwre@098QUQR234)_02349H?'
     app.run()

@@ -71,11 +71,11 @@ class App_Storage(object):
         connection.commit()
         connection.close()
 
-    def delink_user(self,db_file, user_id):        
+    def delink_user(self,db_file, email):        
         self.check_ad_user_table(db_file)
         connection = sqlite3.connect(db_file)
         cursor = connection.cursor()
-        cursor.execute('delete from ad_users where user_id = {user_id})'.format(user_id = user_id))
+        cursor.execute('delete from ad_users where o365_email = {o365email})'.format(o365email = email))
         connection.commit()
         connection.close()
       
