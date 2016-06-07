@@ -21,16 +21,12 @@
  # @author Prasanna Mategaonkar <prasanna@introp.net>
  # @license MIT
  # @copyright (C) 2016 onwards Microsoft Corporation (http://microsoft.com/)
-def validate_string_param(value, name):
-    if not value:
-        raise ValueError("The {0} parameter is required".format(name))
+class ad_user(object):
+    def __init__(self):
+     Id  = 0
+     User_Id = 0
+     Token = ''
+     Token_Type = ''
+     O365_Email = '' 
 
-    if not isinstance(value, str):
-        raise TypeError("The {0} parameter must be of type str".format(name))
 
-def validate_boolean_param(value, name):
-    if not value:
-        raise ValueError("The {0} parameter is required".format(name))
-
-    if not isinstance(value, bool):
-        raise TypeError("The {0} parameter must be of type bool".format(name))

@@ -51,9 +51,14 @@
             </div>
         </div>
     </nav>
-   <center>
+   <center>      
         <div class="panel panel-default">
             <div class="panel-body">
+                {%if error%}
+                <div class="alert alert-danger alert-dismissable" role="alert" style="margin-top: 30px;">
+                    <h4>{{error}}</h4>
+                </div>
+                {%endif%}
                 <p>Select authorization flow and sign in:</p>
                 <div id="tabs">
                     <ul>

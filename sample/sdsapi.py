@@ -21,16 +21,36 @@
  # @author Prasanna Mategaonkar <prasanna@introp.net>
  # @license MIT
  # @copyright (C) 2016 onwards Microsoft Corporation (http://microsoft.com/)
-def validate_string_param(value, name):
-    if not value:
-        raise ValueError("The {0} parameter is required".format(name))
+from token_helper import token_helper
+import requests
 
-    if not isinstance(value, str):
-        raise TypeError("The {0} parameter must be of type str".format(name))
+class sdsapi(object):
+    """This class handles the calls to SDS api."""
+    def __init__(self, **kwargs):
+      return super().__init__(**kwargs)
+  
+    def getschoollist(self,token):
+     tokenhelper = token_helper(token)
+     response = {}
+     response['success'] = False
+     token = tokenhelper.get_token()
+     if (token is None):
+       response['value'] = "The access token to fetch sds data may be expired or not present.Please login through Microsoft account using method Auth Code or Credentials."
+       return response
+     else:
+      options = {}
+      headers = ["Authorization: Bearer " + token]
+      options['headers'] = headers
+      url = "https://graph.windows.net/cdsync66.onmicrosoft.com/administrativeUnits?api-version=beta&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20'School"
+      response_str = requests.post(url,headers = options)
 
-def validate_boolean_param(value, name):
-    if not value:
-        raise ValueError("The {0} parameter is required".format(name))
+     return None
+        #try {
+        #    $response['value'] = $this->process_sdsapi_response($response_str);
+        #    $response['success'] = true;
+        #    return $response;
+       
 
-    if not isinstance(value, bool):
-        raise TypeError("The {0} parameter must be of type bool".format(name))
+
+
+

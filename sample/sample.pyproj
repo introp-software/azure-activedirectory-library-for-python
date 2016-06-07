@@ -23,12 +23,19 @@
   <ItemGroup>
     <Compile Include="app.py" />
     <Compile Include="config.py" />
-    <Compile Include="model\user.py">
+    <Compile Include="localaduser.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="localuser.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="sdsapi.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="storage.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="token_helper.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="static\Content\bootstrap-theme.css" />

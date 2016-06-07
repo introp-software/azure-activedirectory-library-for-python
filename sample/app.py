@@ -1,8 +1,35 @@
+ #Copyright (c) 2016 Micorosft Corporation
+
+ #Permission is hereby granted, free of charge, to any person obtaining a copy
+ #of this software and associated documentation files (the "Software"), to deal
+ #in the Software without restriction, including without limitation the rights
+ #to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ #copies of the Software, and to permit persons to whom the Software is
+ #furnished to do so, subject to the following conditions:
+
+ #The above copyright notice and this permission notice shall be included in
+ #all copies or substantial portions of the Software.
+
+ #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ #IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ #FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ #AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ #LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ #THE SOFTWARE.
+
+ # @author Prasanna Mategaonkar <prasanna@introp.net>
+ # @license MIT
+ # @copyright (C) 2016 onwards Microsoft Corporation (http://microsoft.com/)
 from flask import Flask, render_template, request, session
-from adalpython import Client
 import json
 from flask import current_app
-from storage import App_Storage
+from localuser import user
+from localaduser import ad_user
+from storage import app_storage
+from sdsapi import sdsapi
+from adalpython import Client, httpclient
+from adalpython.httpclient import httpclient
 
 
 
@@ -18,22 +45,7 @@ resource = ''
 storage_location = ''
 redirect_uri = ''
 
-class User(object):
-    """User object of application"""
-    def __init__(self):
-     Id = 0
-     FirstName = ''
-     LastName = ''
-     Email = ''
-     Password = ''
-    
-class Ad_user(object):
-    def __init__(self):
-     Id  = 0
-     User_Id = 0
-     Token = ''
-     Token_Type = ''
-     O365_Email = ''  
+ 
 
 @app.route("/")
 def my_form():
@@ -53,7 +65,7 @@ def my_form_post():
     password = request.form['password']
     try:
         read_configuration()
-        client = Client()
+        client =  Client()
         client.set_clientid(client_id)
         client.set_clientsecret(client_secret)
         client.set_resource(resource)
@@ -65,6 +77,17 @@ def my_form_post():
         firstname = token_details['given_name']
         lastname = token_details['family_name']
         upn = token_details['upn']
+        appstorage = app_storage()
+        try:
+         ad_userobj = appstorage.get_ad_user_by_email(storage_location,upn)
+        except LookupError:
+         ad_userobj = ad_user()
+         ad_userobj.O365_Email = upn
+         ad_userobj.Token = res
+         appstorage.create_ad_user(storage_location,ad_userobj)
+
+        sdsapiobj = sdsapi()
+        sdsapiobj.getschoollist(res)
         session['firstname'] =  firstname
         session['lastname']= lastname
         session['email'] = email
@@ -72,7 +95,7 @@ def my_form_post():
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1}"
         message = template.format(type(ex).__name__, ex.args)
-        return render_template('user.html', upn=message, firstname=message, lastname=message)
+        return render_template('index.html', error = message)
 
 
 @app.route("/register", methods=['POST'])
@@ -83,7 +106,7 @@ def register():
         password = request.form['password']
         firstname = request.form['firstname']
         lastname = request.form['lastname']
-        user = User()
+        user = user()
         user.Email = email
         user.FirstName = firstname
         user.LastName = lastname
@@ -98,7 +121,7 @@ def register():
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1}"
         message = template.format(type(ex).__name__, ex.args)
-        return render_template('user.html', upn=message, firstname=message, lastname=message)
+        return render_template('user.html', error=message)
 
 @app.route("/authcode", methods=['POST'])
 def authcode():
@@ -121,12 +144,20 @@ def authcode():
         client.set_clientid(client_id)
         client.set_clientsecret(client_secret)
         client.set_storage_location(storage_location)
-        tokendetails = client.handle_auth_response(authResponse)
+        tokendetails = client.handle_auth_response(authResponse)       
         id_token = tokendetails['id_token']
         token_details = client.process_idtoken(id_token)
         firstname = token_details['given_name']
         lastname = token_details['family_name']
         upn = token_details['upn']
+        appstorage = app_storage()
+        try:
+         ad_user = appstorage.get_ad_user_by_email(storage_location,upn)
+        except LookupError:
+         ad_user = ad_user()
+         ad_user.O365_Email = upn
+         ad_user.Token = tokendetails
+         appstorage.create_ad_user(storage_location,ad_user)
         session['firstname'] =  firstname
         session['lastname']= lastname
         session['email'] = upn
@@ -134,7 +165,7 @@ def authcode():
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1}"
         message = template.format(type(ex).__name__, ex.args)
-        return render_template('user.html', upn=message, firstname=message, lastname=message)
+        return render_template('user.html', error=message)
 
 @app.route("/usecode", methods= ["POST"])
 def get_token_using_code():
@@ -179,9 +210,9 @@ def locallogin():
      session['userid'] = logged_in_user[4]
      return render_template('user.html', aduser = ad_user)
     except Exception as ex:
-     template = "An exception of type {0} occurred. Arguments:\n{1}"
-     message = template.format(type(ex).__name__, ex.args)
-     return render_template('user.html', upn=message, firstname=message, lastname=message)
+     template = "{0}"
+     message = template.format(ex.args)
+     return render_template('index.html', error = message)
 
 @app.route("/link", methods = ["POST"])
 def linkaccount():
@@ -195,11 +226,11 @@ def linkaccount():
      client.set_resource(resource)
      client.set_storage_location(storage_location)
      stateparam = [email]
-     client.authrequest('code id_token',promptUserToLogin,stateparam)
+     client.authrequest('code',promptUserToLogin,stateparam)
     except Exception as ex:
      template = "An exception of type {0} occurred. Arguments:\n{1}"
      message = template.format(type(ex).__name__, ex.args)
-     return render_template('user.html', upn=message, firstname=message, lastname=message)
+     return render_template('user.html',error = message)
 
 @app.route("/linkaccount", methods = ["POST"])
 def linkaccountresponse():
@@ -233,7 +264,7 @@ def linkaccountresponse():
      user = app_storage.get_user_by_email(storage_location,upn)
      ad_user = Ad_user()
      ad_user.User_Id = user[4]
-     ad_user.Token = tokendetails['id_token']
+     ad_user.Token = tokendetails
      #ad_user.Token_Type = token_details['token_type']
      ad_user.O365_Email = upn
      app_storage.link_user(storage_location,user[4],ad_user)
@@ -248,13 +279,15 @@ def linkaccountresponse():
 @app.route("/unlink", methods = ["POST"])
 def unlinkaccount():
     email = session['email']
+    read_configuration()
     app_storage = App_Storage()
     app_storage.delink_user(storage_location,email)
     return render_template('user.html')
 
+
 def read_configuration():
     global secret_key,client_id,client_secret,resource,storage_location,redirect_uri
-    secret_key = current_app.config['CLIENT_SECRET']
+    #secret_key = current_app.config['CLIENT_SECRET']
     client_id = current_app.config['CLIENT_ID']
     client_secret = current_app.config['CLIENT_SECRET'] 
     resource = current_app.config['RESOURCE']
@@ -263,7 +296,7 @@ def read_configuration():
 
 def read_account_link_configuration():
     global secret_key,client_id,client_secret,resource,storage_location,redirect_uri
-    secret_key = current_app.config['CLIENT_SECRET']
+    #secret_key = current_app.config['CLIENT_SECRET']
     client_id = current_app.config['CLIENT_ID']
     client_secret = current_app.config['CLIENT_SECRET'] 
     resource = current_app.config['RESOURCE']

@@ -21,16 +21,14 @@
  # @author Prasanna Mategaonkar <prasanna@introp.net>
  # @license MIT
  # @copyright (C) 2016 onwards Microsoft Corporation (http://microsoft.com/)
-def validate_string_param(value, name):
-    if not value:
-        raise ValueError("The {0} parameter is required".format(name))
 
-    if not isinstance(value, str):
-        raise TypeError("The {0} parameter must be of type str".format(name))
+class user(object):
+    """User object of application"""
+    def __init__(self):
+     Id = 0
+     FirstName = ''
+     LastName = ''
+     Email = ''
+     Password = ''
 
-def validate_boolean_param(value, name):
-    if not value:
-        raise ValueError("The {0} parameter is required".format(name))
 
-    if not isinstance(value, bool):
-        raise TypeError("The {0} parameter must be of type bool".format(name))
