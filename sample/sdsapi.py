@@ -23,6 +23,8 @@
  # @copyright (C) 2016 onwards Microsoft Corporation (http://microsoft.com/)
 from token_helper import token_helper
 import requests
+import json
+from werkzeug.routing import ValidationError
 
 class sdsapi(object):
     """This class handles the calls to SDS api."""
@@ -39,16 +41,36 @@ class sdsapi(object):
        return response
      else:
       options = {}
-      headers = ["Authorization: Bearer " + token]
-      options['headers'] = headers
-      url = "https://graph.windows.net/cdsync66.onmicrosoft.com/administrativeUnits?api-version=beta&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20'School"
-      response_str = requests.post(url,headers = options)
+      headers = {"Authorization" : "Bearer "+ token}
+      #options['headers'] = headers
+      url = "https://graph.windows.net/cdsync66.onmicrosoft.com/administrativeUnits?api-version=beta&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20'School'"
+      response_str = requests.get(url,headers = headers)
+      response['value'] = self.parse_sdsapi_response(response_str)
+      response['success'] = True
+      return response
+ 
 
-     return None
-        #try {
-        #    $response['value'] = $this->process_sdsapi_response($response_str);
-        #    $response['success'] = true;
-        #    return $response;
+    def parse_sdsapi_response(self,response):
+     result = json.loads(response.content.decode('utf-8'))
+     if (result is None):
+        raise ValidationError('Error : Bad api call')
+          
+     try: 
+      if (result['odata.error'] is not None):
+        if ((result['odata.error']['message']) is not None and (result['odata.error']['message']['value'] is not None)):
+            apierrormessage = result['odata.error']['message']['value'];
+            raise ValidationError(apierrormessage)
+        else:
+            raise ValidationError('Error : Bad api call')
+     except KeyError:
+      values = {}
+      properties = result['value']
+      for key in properties[0]:
+         new_key = key.replace('extension_fe2174665583431c953114ff7268b7b3_','')
+         values[new_key] = properties[0][key]
+      return values
+
+       
        
 
 

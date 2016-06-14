@@ -22,6 +22,7 @@
  # @license MIT
  # @copyright (C) 2016 onwards Microsoft Corporation (http://microsoft.com/)
 import sqlite3
+from localaduser import ad_user
 
 class app_storage(object):
     def check_user_table(self, db_file):
@@ -82,7 +83,10 @@ class app_storage(object):
         connection.close()
         if row is None:
             raise LookupError("User does not exist")
-        return row
+        ad_userobj = ad_user()
+        ad_userobj.O365_Email = row[1]
+        ad_userobj.Token = row[2]
+        return ad_userobj
 
     def get_user_by_email(self,db_file,email):
         self.check_user_table(db_file)

@@ -1,41 +1,5 @@
-﻿<html>
-<head>
-    <style type="text/css">
-        body {
-            padding-top: 100px;
-            color: rgb(88, 88, 88) !important;
-            background-color: rgb(240, 240, 240) !important;
-        }
-
-        .navbar-fixed-top {
-            border-bottom: 1px solid rgba(255,255,255,.3);
-            background: #000 !important;
-        }
-    </style>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/Site.css')}}" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/my-jquery-ui.css')}}" />
-    <script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery-2.1.4.min.js')}}" />
-    <script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery-ui.min.js')}}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery.easing.min.js')}}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery.validate.min.js')}}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='Scripts/modernizr-2.8.3.js')}}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='Scripts/bootstrap.js')}}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='Scripts/respond.js')}}"></script>
-    <!--<script type="text/javascript" src="{{ url_for('static', filename='Scripts/grayscale.js')}}"></script>-->
-    <script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery-ui.js')}}"></script>
-
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/bootstrap.css')}}" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/site.css')}}" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/grayscale.css')}}" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/font-awesome.min.css')}}" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/google_font_lora.css')}}" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/google_font_montserrat.css')}}" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/home.css')}}" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/signin.css')}}" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/jquery-ui.min.css')}}" />
-</head>
-<body data-spy="scroll" background={{ url_for('static', filename='img/intro-bg.jpg' )}}>
-
+﻿{% extends "Layout.html" %}
+{% block content %}
     <div class="panel-default" style="width:100% !important">
 
         <div class="container">
@@ -77,9 +41,79 @@
                     </tr>
                 </tbody>
             </table>
+        
+        {% if session['sdsresponse'] %}
+        <h4> School Information </h4>       
+        <div class="row">
+            &nbsp;
         </div>
-
-    </div>
-
-</body>
-</html>
+        <div class="row">
+            <div class="col-md-2">
+                School Name :
+            </div>
+            <div class="col-md-4">
+                {{ session['sdsresponse']['value']['displayName'] }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                School Id :
+            </div>
+            <div class="col-md-4">
+                {{ session['sdsresponse']['value']['Education_SchoolNumber'] }}
+            </div>          
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                Principal Name :
+            </div>
+            <div class="col-md-4">
+                {{ session['sdsresponse']['value']['Education_SchoolPrincipalName'] }}                
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                Principal Mail :
+            </div>
+            <div class="col-md-4">
+                {{ session['sdsresponse']['value']['Education_SchoolPrincipalEmail'] }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                Highest Grade :
+            </div>
+            <div class="col-md-4">
+                {{ session['sdsresponse']['value']['Education_HighestGrade'] }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                Lowest Grade :
+            </div>
+            <div class="col-md-4">
+                {{ session['sdsresponse']['value']['Education_LowestGrade'] }}                
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                Phone :
+            </div>
+            <div class="col-md-4">
+                {{ session['sdsresponse']['value']['Education_Phone'] }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                Address :
+            </div>
+            <div class="col-md-4">
+                {{ session['sdsresponse']['value']['Education_Address'] }} ,
+                {{ session['sdsresponse']['value']['Education_City'] }} ,
+                {{ session['sdsresponse']['value']['Education_State'] }}                
+            </div>
+        </div>
+        {% endif %}
+     </div>
+</div>
+{% endblock %}

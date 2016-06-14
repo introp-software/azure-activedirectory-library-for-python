@@ -1,0 +1,58 @@
+﻿<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/Site.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/my-jquery-ui.css')}}" />
+    <script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery-2.1.4.min.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery-ui.min.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery.easing.min.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery.validate.min.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='Scripts/modernizr-2.8.3.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='Scripts/bootstrap.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='Scripts/respond.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='Scripts/grayscale.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery-ui.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/bootstrap.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/site.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/grayscale.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/font-awesome.min.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/google_font_lora.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/google_font_montserrat.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/home.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/signin.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/jquery-ui.min.css')}}" />
+
+    <style type="text/css">
+        .nav-link {
+            color: #fff;
+        }
+
+        .navbar a {
+            text-shadow: none !important;
+        }
+
+        .color-pink {
+            color: lightcoral;
+        }
+    </style>
+</head>
+<body data-spy="scroll" background={{ url_for('static', filename='img/intro-bg.jpg' )}}>
+    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="./index1.html">Python AAD Sample App</a>
+            </div>
+            <div id="navbar">
+                <ul class="nav navbar-nav pull-right">
+                    <li><a href="#about" class="nav-link page-scroll navbar-normal">About</a></li>
+                    <li><a href="#contact" class="nav-link page-scroll navbar-normal">Contact</a></li>
+                    <li><a href="/login" class="nav-link page-scroll navbar-normal">Sign In</a></li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% block content %} {% endblock %}
+
+</body>
+</html>

@@ -82,12 +82,10 @@
     <Content Include="static\Scripts\user-list.js" />
     <Content Include="static\Scripts\w3data.js" />
     <Content Include="static\Scripts\_references.js" />
-    <Content Include="templates\include.html" />
-    <Content Include="templates\Index - Copy.html" />
+    <Content Include="templates\Login.html" />
     <Content Include="templates\Index.html" />
-    <Content Include="templates\Index1.html" />
-    <Content Include="templates\user.html" />
-    <Content Include="templates\welcome.html" />
+    <Content Include="templates\Layout.html" />
+    <Content Include="templates\User.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="model\" />

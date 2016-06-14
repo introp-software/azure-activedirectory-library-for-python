@@ -1,124 +1,102 @@
-<html>
-<head>
-   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/Site.css')}}" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/my-jquery-ui.css')}}" />
-	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery-2.1.4.min.js')}}"/>
-	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery-ui.min.js')}}"></script>
-	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery.easing.min.js')}}"></script>
-	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery.validate.min.js')}}"></script>
-	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/modernizr-2.8.3.js')}}"></script>
-	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/bootstrap.js')}}"></script>
-	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/respond.js')}}"></script>
-	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/grayscale.js')}}"></script>
-	<script type="text/javascript" src="{{ url_for('static', filename='Scripts/jquery-ui.js')}}"></script>
-	
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/bootstrap.css')}}"/>
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/site.css')}}"/>
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/grayscale.css')}}"/>
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/font-awesome.min.css')}}"/>
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/google_font_lora.css')}}"/>
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/google_font_montserrat.css')}}"/>
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/home.css')}}"/>
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/signin.css')}}"/>
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Content/jquery-ui.min.css')}}"/>
+{% extends "Layout.html" %}
+{% block content %}
+<!-- Intro Header -->
+<header class="intro">
+    <div class="intro-body">
+        <div class="container-fluid">
 
-    <style type="text/css">
-        .nav-link{
-            color: #fff;
-        }
-        .navbar a{
-            text-shadow: none !important;
-        }
-        .color-pink{
-            color: lightcoral;
-        }
-    </style>
-</head>
-<body data-spy="scroll" background={{ url_for('static', filename='img/intro-bg.jpg')}} >
-    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
-        <div class="container">
 
-            <div class="navbar-header">
-                <a class="navbar-brand" href="./index1.html">Python AAD Sample App</a>
-            </div>
-            <div id="navbar">
-                <ul class="nav navbar-nav pull-right">
-                    <li><a href="/#about" class="nav-link page-scroll navbar-normal">About</a></li>
-                    <li><a href="/#contact" class="nav-link page-scroll navbar-normal">Contact</a></li>
-                    <li><a href="/login" class="nav-link color-pink page-scroll navbar-normal">Sign In</a></li>
-                   
-                </ul>
-            </div>
-        </div>
-    </nav>
-   <center>      
-        <div class="panel panel-default">
-            <div class="panel-body">
-                {%if error%}
-                <div class="alert alert-danger alert-dismissable" role="alert" style="margin-top: 30px;">
-                    <h4>{{error}}</h4>
+            <div class="row">
+                <div class="col-md-4 brand-title" style="margin-top: 200px;">
+
+                    <h1 class="brand-heading"><i class="fa fa-check-square-o"></i> AADS</h1>
+                    <h2>(Python Sample App)</h2>
+                    <p class="intro-text">This sample app demonstrates authentication and REST API usage with Microsoft Azure AD using Python.</p>
                 </div>
-                {%endif%}
-                <p>Select authorization flow and sign in:</p>
-                <div id="tabs">
-                    <ul>
-                        <li><a href="#tabs-1" class="btn">Auth Code</a></li>
-                        <li><a href="#tabs-2" class="btn">Hybrid</a></li>
-                        <li><a href="#tabs-3" class="btn">Credentials</a></li>
-                        <li><a href="#tabs-4" class="btn">Local </a></li>
-                    </ul>
-                    <div id="tabs-1">
-					    <form method="POST" action="./usecode">
-                        <div class="form-group">
-                            <a class="btn btn-block btn-msft" href="#" onclick="$(this).closest('form').submit()" role="button"><img src="{{ url_for('static', filename='img/microsoft-icon.png')}}" class="msft-icon">Sign in with your Work or School account</a>
-                        </div>
-						</form>
-                    </div>
-                    <div id="tabs-2">
-					<form method="POST" action="./hybrid">
-                        <div class="form-group">
-                            <a class="btn btn-block btn-msft" href="#" onclick="$(this).closest('form').submit()" role="button"><img src="{{ url_for('static', filename='img/microsoft-icon.png')}}" class="msft-icon">Sign in with your Work or School account</a>
-                        </div>
-					</form>
-                    </div>
-                    <div id="tabs-3">
-                        <form role="form" method="POST" action=".">
-                            <fieldset>
+
+                <div class="col-md-4 brand-title">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <form role="form" action="/register" method="post">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="username" name="username" placeholder="Email">
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="EMail Address">
                                 </div>
                                 <div class="form-group">
                                     <input type="password" class="form-control" id="password" name="password" placeholder="Password">
                                 </div>
                                 <div class="form-group">
-                                    <button type="submit" class="btn btn-block btn-em">Login</button>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
-                    <div id="tabs-4">
-                        <form action="./locallogin" method="post">
-                            <fieldset>
-                                <div class="form-group">
-                                    <input type="text" class="form-control" id="localemail" name="localemail" placeholder="Email">
+                                    <input type="text" class="form-control" id="firstname" name="firstname" placeholder="First Name">
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" class="form-control" id="localpassword" name="localpassword" placeholder="Password">
+                                    <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last Name">
                                 </div>
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-block btn-em">Login</button>
-                                </div>
-                            </fieldset>
-                        </form>
+                                <div class="super-tiny-text">By signing up, you agree to our <a href="javascript:void(0)" style="color: #fff;">Terms and Conditions</a></div>
+                                <input type="submit" value="Sign up" class="btn btn-block btn-em">
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div class="row scroll-arrow" style="width: 150px;">
+                <div class="col-md-12">
+                    <a href="#about" class="btn btn-circle page-scroll" style="padding-top: 15px;">
+                        <i class="fa fa-angle-double-down animated"></i>
+                    </a>
+                </div>
+            </div>
         </div>
-    </center>
-<script>
-    $(function () {
-        $("#tabs").tabs();
-    });
-</script>
-</body>
-</html>
+    </div>
+</header>
+
+<!-- About Section -->
+<section id="about" class="container content-section text-center">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+            <h2>About the Python AAD Sample App</h2>
+            <p>The Python AAD Sample App can help you understand how to integrate your app with Azure Active Directory using Python.</p>
+            <p>
+                In the sign-up form, type in the email address of a user with an Azure AD account and a password. This will create a local account for that user. After signing in, you can link this local account with their Azure AD account.  Once linked in this manner, you can sign in either using the local account or
+                using the Azure AD account. For the Azure AD account, you can sign in using one of 3 standard OAuth2 flows: Authorization, Hybrid, and Resource Owner Credentials.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Download Section -->
+<section id="download" class="content-section text-center">
+    <div class="download-section">
+        <div class="container">
+            <div class="col-lg-8 col-lg-offset-2">
+                <h2>Download Python AAD Sample App</h2>
+                <p>You can view the source code for Python AAD Sample App on GitHub.</p>
+                <a href="https://github.com/jamesmcq/oidc-aad-php-library/tree/master/src/samples" class="btn btn-default btn-lg btn-transparent"><i class="fa fa-github fa-fw"></i> <span class="network-name">Azure-Samples on Github</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="container content-section text-center">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+            <h2>Contact Azure AD</h2>
+            <p>We're here to help with all your questions about integrating with Azure AD.  We've already posted a lot of good stuff though, so check out our documentation first!</p>
+            <ul class="list-inline banner-social-buttons">
+                <li>
+                    <a href="https://twitter.com/AzureAD" class="btn btn-default btn-lg btn-transparent"><i class="fa fa-twitter fa-fw"></i> <span class="network-name">Twitter</span></a>
+                </li>
+                <li>
+                    <a href="https://stackoverflow.com/tags/azure-active-directory" class="btn btn-default btn-lg btn-transparent"><i class="fa fa-stack-overflow"></i> <span class="network-name">Stack Overflow</span></a>
+                </li>
+                <li>
+                    <a href="https://github.com/AzureAD" class="btn btn-default btn-lg btn-transparent"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
+                </li>
+                <li>
+                    <a href="https://aka.ms/aaddev" class="btn btn-default btn-lg btn-transparent"><span class="network-name">Azure.com</span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+{% endblock %}

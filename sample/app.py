@@ -50,14 +50,14 @@ redirect_uri = ''
 @app.route("/")
 def my_form():
     try:
-     return render_template("index1.html")
+     return render_template("Index.html")
     except Exception as e:
      return e
 
 
 @app.route("/login")
 def login():
-    return render_template("index.html")
+    return render_template("Login.html")
 
 @app.route("/", methods=['POST'])
 def my_form_post():
@@ -74,12 +74,19 @@ def my_form_post():
         access_token = res['access_token']
         id_token = res['id_token']
         token_details = client.process_idtoken(id_token)
-        firstname = token_details['given_name']
-        lastname = token_details['family_name']
+        try:
+            firstname = token_details['given_name']
+            lastname = token_details['family_name']
+        except KeyError:
+            firstname = token_details['name']
+            lastname = ''
+
         upn = token_details['upn']
         appstorage = app_storage()
         try:
-         ad_userobj = appstorage.get_ad_user_by_email(storage_location,upn)
+         ad_userobj = appstorage.get_ad_user_by_email(storage_location,upn) 
+         ad_userobj.Token = res;
+         appstorage.update_ad_user(storage_location,ad_userobj)
         except LookupError:
          ad_userobj = ad_user()
          ad_userobj.O365_Email = upn
@@ -91,11 +98,11 @@ def my_form_post():
         session['firstname'] =  firstname
         session['lastname']= lastname
         session['email'] = email
-        return render_template('user.html')
+        return render_template('User.html')
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1}"
         message = template.format(type(ex).__name__, ex.args)
-        return render_template('index.html', error = message)
+        return render_template('Login.html', error = message)
 
 
 @app.route("/register", methods=['POST'])
@@ -117,11 +124,11 @@ def register():
         session['lastname']= lastname
         session['email'] = email
         session['userid'] = user_id
-        return render_template('user.html')
+        return render_template('User.html')
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1}"
         message = template.format(type(ex).__name__, ex.args)
-        return render_template('user.html', error=message)
+        return render_template('Login.html', error=message)
 
 @app.route("/authcode", methods=['POST'])
 def authcode():
@@ -147,25 +154,36 @@ def authcode():
         tokendetails = client.handle_auth_response(authResponse)       
         id_token = tokendetails['id_token']
         token_details = client.process_idtoken(id_token)
-        firstname = token_details['given_name']
-        lastname = token_details['family_name']
+        try:
+            firstname = token_details['given_name']
+            lastname = token_details['family_name']
+        except KeyError:
+            firstname = token_details['name']
+            lastname = ''
+
         upn = token_details['upn']
         appstorage = app_storage()
         try:
-         ad_user = appstorage.get_ad_user_by_email(storage_location,upn)
+         ad_userobj = appstorage.get_ad_user_by_email(storage_location,upn) 
+         ad_userobj.Token = tokendetails;
+         appstorage.update_ad_user(storage_location,ad_userobj)
         except LookupError:
-         ad_user = ad_user()
-         ad_user.O365_Email = upn
-         ad_user.Token = tokendetails
-         appstorage.create_ad_user(storage_location,ad_user)
+         ad_userobj = ad_user()
+         ad_userobj.O365_Email = upn
+         ad_userobj.Token = tokendetails
+         appstorage.create_ad_user(storage_location,ad_userobj)
+
+        sdsapiobj = sdsapi()
+        sdsresponse = sdsapiobj.getschoollist(tokendetails)
+        session['sdsresponse'] = sdsresponse
         session['firstname'] =  firstname
         session['lastname']= lastname
         session['email'] = upn
-        return render_template('user.html')
+        return render_template('User.html')
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1}"
         message = template.format(type(ex).__name__, ex.args)
-        return render_template('user.html', error=message)
+        return render_template('Login.html', error=message)
 
 @app.route("/usecode", methods= ["POST"])
 def get_token_using_code():
@@ -197,22 +215,25 @@ def locallogin():
      read_configuration()
      username = request.form["localemail"]
      password = request.form["localpassword"]     
-     storage = App_Storage()
+     storage = app_storages()
      logged_in_user = storage.login_user(storage_location,username,password)
      try:
       ad_user = storage.get_ad_user(storage_location,logged_in_user[4])
      except LookupError:
       ad_user = None
 
+     sdsapiobj = sdsapi()
+     sdsresponse = sdsapiobj.getschoollist(tokendetails)
+     session['sdsresponse'] = sdsresponse
      session['firstname'] =  logged_in_user[2]
      session['lastname']= logged_in_user[3]
      session['email'] = logged_in_user[0]
      session['userid'] = logged_in_user[4]
-     return render_template('user.html', aduser = ad_user)
+     return render_template('User.html', aduser = ad_user)
     except Exception as ex:
      template = "{0}"
      message = template.format(ex.args)
-     return render_template('index.html', error = message)
+     return render_template('Login.html', error = message)
 
 @app.route("/link", methods = ["POST"])
 def linkaccount():
@@ -230,7 +251,7 @@ def linkaccount():
     except Exception as ex:
      template = "An exception of type {0} occurred. Arguments:\n{1}"
      message = template.format(type(ex).__name__, ex.args)
-     return render_template('user.html',error = message)
+     return render_template('User.html',error = message)
 
 @app.route("/linkaccount", methods = ["POST"])
 def linkaccountresponse():
@@ -260,21 +281,21 @@ def linkaccountresponse():
     if state.lower().find(upn.lower()) != -1:
      firstname = session['firstname']
      lastname =  session['lastname']
-     app_storage = App_Storage()
-     user = app_storage.get_user_by_email(storage_location,upn)
-     ad_user = Ad_user()
-     ad_user.User_Id = user[4]
-     ad_user.Token = tokendetails
+     app_storageObj = app_storage()
+     user = app_storageObj.get_user_by_email(storage_location,upn)
+     ad_userobj = ad_user()
+     ad_userobj.User_Id = user[4]
+     ad_userobj.Token = tokendetails
      #ad_user.Token_Type = token_details['token_type']
-     ad_user.O365_Email = upn
-     app_storage.link_user(storage_location,user[4],ad_user)
-     return render_template('user.html',aduser=ad_user)
+     ad_userobj.O365_Email = upn
+     app_storage.link_user(storage_location,user[4],ad_userobj)
+     return render_template('User.html',aduser=ad_userobj)
     else:
-     return render_template('user.html',error = "Your O365 email does not match with your current email id.")
+     return render_template('User.html',error = "Your O365 email does not match with your current email id.")
    except Exception as ex:
     template = "An exception of type {0} occurred. Arguments:\n{1}"
     message = template.format(type(ex).__name__, ex.args)
-    return render_template('user.html', error = message)
+    return render_template('User.html', error = message)
 
 @app.route("/unlink", methods = ["POST"])
 def unlinkaccount():
@@ -282,7 +303,7 @@ def unlinkaccount():
     read_configuration()
     app_storage = App_Storage()
     app_storage.delink_user(storage_location,email)
-    return render_template('user.html')
+    return render_template('User.html')
 
 
 def read_configuration():

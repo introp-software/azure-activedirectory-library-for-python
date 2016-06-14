@@ -43,14 +43,16 @@ tokendetails = client.handle_auth_response(response)
 
 To perform a resource-owner credentials request:
 ```
-$returned = $client->rocredsrequest($_POST['username'], $_POST['password']);
-$idtoken = \microsoft\aadphp\AAD\IDToken::instance_from_encoded($returned['id_token']);
+ token_response = client.rocredsrequest(request.form['username'], request.form['password']);
+ res = json.loads(token_response.content.decode('UTF-8'))
+ id_token = res['id_token']
 ```
 
-To get user information from an IDToken, call ->claim() on the $idtoken object. This returns OpenID Connect claims:
+To get user information from an IDToken, call process_idtoken on the client object. This returns OpenID Connect claims:
 ```
-$idtoken->claim('name');
-$idtoken->claim('upn');
+ token_details = client.process_idtoken(id_token)
+ firstname = token_details['given_name']
+ upn = token_details['upn']
 ```
 ## Authorization Code Flows
   There are 3 authorization code flows one can implement with this library. 
@@ -59,14 +61,14 @@ $idtoken->claim('upn');
 
   This is the common 3 legged OAuth2 flow. This will redirect you to the Azure AD login page if you aren't already logged in to Azure AD and take you through the login process.
   Example:
-  To initate a authorization request call the function $client->authrequest(). The client is set to use this method as default.
+  To initate a authorization request call the function client.authrequest('code',promptUserToLogin). promptUserToLogin is a boolean value which can be set to true if you want to show the login prompt even if user is already logged-in.
 ```
-$client->authrequest();
+client.authrequest('code',promptUserToLogin)
 ```
-  This will perform an authorization request by redirecting resource owner's user agent to authentication endpoint. Your request will be processed and response will be served in the redirect uri you have set earlier in config.php.
-  To handle the response call the function $client->handle_auth_response($_REQUEST).
+  This will perform an authorization request by redirecting resource owner's user agent to authentication endpoint. Your request will be processed and response will be served in the redirect uri you have set earlier in config.py.
+  To handle the response call the function client.handle_auth_response(authResponse).
 ```
-list($idtoken, $tokenparams, $stateparams) = $client->handle_auth_response($_REQUEST);
+tokendetails = client.handle_auth_response(authResponse) 
 ```
   Now, $idtoken has the object of JWT token(you can claim the user information using this token), $tokenparams contain array of token parameters i.e. access_token, refresh_token, $stateparams contain state parameters.
 

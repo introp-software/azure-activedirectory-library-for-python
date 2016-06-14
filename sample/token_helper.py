@@ -25,10 +25,11 @@
 from storage import app_storage
 from localuser import user
 from localaduser import ad_user
-from _datetime import datetime
+import time
 from urllib.parse import unquote, urlparse, urlencode, ParseResult, parse_qsl
 from flask import current_app
-from adalpython import httpclient
+from adalpython import httpclient, Client
+import json
 
 
 class token_helper(object):
@@ -42,7 +43,7 @@ class token_helper(object):
 
     def is_token_valid(self):
         if (self.rawtoken is None or
-            self.rawtoken['expiryon'] < datetime.datetime.now()):
+            int(self.rawtoken['expires_on']) < int(round(time.time() * 1000))):
          return False
         else:
          return True
@@ -50,11 +51,11 @@ class token_helper(object):
     def get_token(self):
      try:
       if(self.is_token_valid() == True):
-         return self.rawtoken["token"]
+         return self.rawtoken["access_token"]
       else:
          self.refresh_token()
-         return self.rawtoken["token"]
-     except:
+         return self.rawtoken["access_token"]
+     except Exception as ex:
       return None
 
     def refresh_token(self):
@@ -69,12 +70,15 @@ class token_helper(object):
         httpClient = httpclient()
         response = httpClient.post('https://login.microsoftonline.com/common/oauth2/token',params)
         res = json.loads(response.content.decode('UTF-8'))
-        ad_user = Ad_user()
-        ad_user.Token = res["token"]
-        ad_user.O365_Email = res['upn']
+        ad_userobj = ad_user()
+        client = Client()
+        ad_userobj.Token = res
+        id_token = res['access_token']
+        token_details = client.process_idtoken(id_token)
+        ad_userobj.O365_Email = token_details['upn']
         appstorage = app_storage()
-        appstorage.update_ad_user(current_app.config['STORAGE_LOCATION'],ad_user)
-        self.rawtoken = res["token"]
+        appstorage.update_ad_user(current_app.config['STORAGE_LOCATION'],ad_userobj)
+        self.rawtoken = res
             
       
 
