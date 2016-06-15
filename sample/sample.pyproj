@@ -38,6 +38,7 @@
     <Compile Include="token_helper.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="README.md" />
     <Content Include="static\Content\bootstrap-theme.css" />
     <Content Include="static\Content\bootstrap-theme.min.css" />
     <Content Include="static\Content\bootstrap.css" />
