@@ -23,8 +23,7 @@
  # @copyright (C) 2016 onwards Microsoft Corporation (http://microsoft.com/)
 import requests
 class httpclient(object):
-    """description of class
-    TODO: Validate the input, and handle the exception."""
+    """HTTP client to handle GET/POST requests."""
     def post(self,url,parameters,isJSON = False):
         if isJSON == True:
            response = requests.post(url,json=json.dumps(parameters))

@@ -42,7 +42,7 @@ secret_key = ''
 client_id = ''
 client_secret = ''
 resource = ''
-storage_location = ''
+storage_location = 'aadpythonstorage.sqlite'
 redirect_uri = ''
 
  
@@ -58,6 +58,11 @@ def my_form():
 @app.route("/login")
 def login():
     return render_template("Login.html")
+
+@app.route("/logout")
+def logout():
+    session.logged_in = False
+    return render_template("Index.html")
 
 @app.route("/", methods=['POST'])
 def my_form_post():
@@ -124,6 +129,7 @@ def register():
         session['lastname']= lastname
         session['email'] = email
         session['userid'] = user_id
+        session.logged_in = True
         return render_template('User.html')
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1}"
@@ -179,6 +185,7 @@ def authcode():
         session['firstname'] =  firstname
         session['lastname']= lastname
         session['email'] = upn
+        session.logged_in = True
         return render_template('User.html')
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1}"
@@ -229,6 +236,7 @@ def locallogin():
      session['lastname']= logged_in_user[3]
      session['email'] = logged_in_user[0]
      session['userid'] = logged_in_user[4]
+     session.logged_in = True
      return render_template('User.html', aduser = ad_user)
     except Exception as ex:
      template = "{0}"
@@ -289,6 +297,7 @@ def linkaccountresponse():
      #ad_user.Token_Type = token_details['token_type']
      ad_userobj.O365_Email = upn
      app_storage.link_user(storage_location,user[4],ad_userobj)
+     session.logged_in = True
      return render_template('User.html',aduser=ad_userobj)
     else:
      return render_template('User.html',error = "Your O365 email does not match with your current email id.")
@@ -312,7 +321,6 @@ def read_configuration():
     client_id = current_app.config['CLIENT_ID']
     client_secret = current_app.config['CLIENT_SECRET'] 
     resource = current_app.config['RESOURCE']
-    storage_location = current_app.config['STORAGE_LOCATION']
     redirect_uri = current_app.config['REDIRECT_URI']
 
 def read_account_link_configuration():
@@ -321,7 +329,6 @@ def read_account_link_configuration():
     client_id = current_app.config['CLIENT_ID']
     client_secret = current_app.config['CLIENT_SECRET'] 
     resource = current_app.config['RESOURCE']
-    storage_location = current_app.config['STORAGE_LOCATION']
     redirect_uri = current_app.config['LINK_REDIRECT_URI']
 
 if __name__ == "__main__":

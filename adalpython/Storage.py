@@ -26,6 +26,9 @@ from adalpython.argument import validate_string_param
 import sqlite3
 class Storage(object):
 
+    def __init__(self, **kwargs):
+       self._dbfile = None
+
     def set_dbfile(self,value):
         self._dbfile = value
 

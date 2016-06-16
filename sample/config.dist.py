@@ -21,9 +21,8 @@
  # @author Prasanna Mategaonkar <prasanna@introp.net>
  # @license MIT
  # @copyright (C) 2016 onwards Microsoft Corporation (http://microsoft.com/)
-CLIENT_ID = "445d81db-d520-4e5e-8713-ffedcb7ab79f"
-CLIENT_SECRET = "SmDf3Vn4xHcDBlrbOMwufPckAFymWFSfIWLKX4rrMpE="
+CLIENT_ID = "<Client Id>"
+CLIENT_SECRET = "<Clicent Secret>"
 RESOURCE = "https://graph.windows.net"
-STORAGE_LOCATION = "G:\\Dev\\FlaskApp\\test.sqlite"
-REDIRECT_URI = "http://localhost:5000/authcode"
-LINK_REDIRECT_URI="http://localhost:5000/linkaccount"
+REDIRECT_URI = "http://localhost:5000/authcode"  #Change the URL or Port number as per your environment
+LINK_REDIRECT_URI="http://localhost:5000/linkaccount" #This URL is being used for linking the Office365 account with local account

@@ -21,6 +21,9 @@
  # @author Prasanna Mategaonkar <prasanna@introp.net>
  # @license MIT
  # @copyright (C) 2016 onwards Microsoft Corporation (http://microsoft.com/)
+
+ #This file contains the methods used to validate the input parameters at various places.
+
 def validate_string_param(value, name):
     if not value:
         raise ValueError("The {0} parameter is required".format(name))

@@ -28,28 +28,26 @@ import webbrowser
 from urllib.parse import unquote, urlparse, urlencode, ParseResult, parse_qsl
 import json
 from adalpython import argument
-import adalpython
 from uuid import uuid1
 from adalpython.argument import validate_string_param
-import random
 from string import ascii_lowercase
 from adalpython.Storage import Storage
 from random import choice
-"""description of class"""
+"""This class contains the methods for communicate with AZURE AD"""
     
-""" Need to add licensing terms here 
-"""
 class Client(object):
         
     def __init__(self):
      self._auth_end_point = _DefaultValues.auth_end_point
      self._resource = _DefaultValues.resource
-     self._auth_flow = _DefaultValues.auth_flow
+     self._authflow = _DefaultValues.auth_flow
      self._clientsecret = _DefaultValues._clientsecret
      self._redirecturi = _DefaultValues.redirecturi
      self._clientid = _DefaultValues.client_id
      self._httpClient = None
      self._storage = None
+     self._storage_location = None
+
  
     '''
      Perform an authorization request by redirecting resource owner's user agent to auth endpoint.
@@ -59,7 +57,7 @@ class Client(object):
       extraparams(List,optional) : Additional parameters to send with the OIDC request.
      
      '''
-    def authrequest(self,requesttype,promptlogin = False,stateparams=[], extraparams=[]):
+    def authrequest(self,requesttype,promptlogin=False,stateparams=[], extraparams=[]):
         validate_string_param(requesttype,'Request Type')
         try:
          url = self.get_login_url()
@@ -104,14 +102,14 @@ class Client(object):
      res = json.loads(response.content.decode('UTF-8'))
      return res
 
-    '''/**
-     * Process and return idtoken.
-     *
-     * @param string $idtoken Encoded id token.
-     * @param string $expectednonce Expected nonce to validate received nonce against.
-     * @return \microsoft\adalphp\OIDC\IDTokenInterface An IDToken object.
+    '''
+     Process and return idtoken.
+     
+     param string idtoken Encoded id token.
+     param string expectednonce Expected nonce to validate received nonce against.
+     return  An IDToken object.
      */'''
-    def process_idtoken(self,idtoken, expectednonce = ''):
+    def process_idtoken(self,idtoken, expectednonce=''):
         details = jwt.decode(idtoken,False,None,None)
         return details     
 
@@ -203,7 +201,7 @@ class Client(object):
         stateparam = ''
         if len(stateparams) > 0 :            
          for stateitem in stateparams:
-          stateparam += stateitem +","
+          stateparam += stateitem + ","
             
         params['state'] = stateparam + state
         if extraparams is not None:
@@ -219,7 +217,7 @@ class Client(object):
         
     def _get_nonce(self):
         nonce = uuid1().hex.replace("-","")
-        nonce = nonce+ self._get_random_string(40)
+        nonce = nonce + self._get_random_string(40)
         return nonce
 
 
@@ -269,19 +267,15 @@ class Client(object):
  
      # Bool and Dict values should be converted to json-friendly values
      # you may throw this part away if you don't like it :)
-     parsed_get_args.update(
-        {k: dumps(v) for k, v in parsed_get_args.items()
-         if isinstance(v, (bool, dict))}
-     )
+     parsed_get_args.update({k: dumps(v) for k, v in parsed_get_args.items()
+         if isinstance(v, (bool, dict))})
 
      # Converting URL argument to proper query string
      encoded_get_args = urlencode(parsed_get_args, doseq=True)
      # Creating new parsed result object based on provided with new
-     # URL arguments. Same thing happens inside of urlparse.
-     new_url = ParseResult(
-        parsed_url.scheme, parsed_url.netloc, parsed_url.path,
-        parsed_url.params, encoded_get_args, parsed_url.fragment
-     ).geturl()
+     # URL arguments.  Same thing happens inside of urlparse.
+     new_url = ParseResult(parsed_url.scheme, parsed_url.netloc, parsed_url.path,
+                           parsed_url.params, encoded_get_args, parsed_url.fragment).geturl()
 
      return new_url
 
@@ -291,8 +285,9 @@ class _DefaultValues:
     auth_end_point = 'https://login.microsoftonline.com/common/oauth2/authorize'
     auth_flow = 'code'
     redirecturi = 'http://localhost'
-    _clientsecret =''
-    # This client is common to all tenants.  It is used by the Azure XPlat tools and is used for
+    _clientsecret = ''
+    # This client is common to all tenants.  It is used by the Azure XPlat
+    # tools and is used for
     # username password logins.
-    client_id = '04b07795-8ddb-461a-bbee-02f9e1bf7b46'
+    client_id = ''
     token_uri = "https://login.microsoftonline.com/common/oauth2/token"

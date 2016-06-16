@@ -40,14 +40,17 @@
     <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand" href="./index1.html">Python AAD Sample App</a>
+                <a class="navbar-brand" href="/">Python AAD Sample App</a>
             </div>
             <div id="navbar">
                 <ul class="nav navbar-nav pull-right">
                     <li><a href="#about" class="nav-link page-scroll navbar-normal">About</a></li>
                     <li><a href="#contact" class="nav-link page-scroll navbar-normal">Contact</a></li>
-                    <li><a href="/login" class="nav-link page-scroll navbar-normal">Sign In</a></li>
-
+                    {% if not session.logged_in %}
+                        <li><a href="/login" class="nav-link page-scroll navbar-normal">Sign In</a></li>
+                    {% else %}
+                        <li><a href="/logout" class="nav-link page-scroll navbar-normal">Sign Out</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

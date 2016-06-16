@@ -4,6 +4,7 @@ This sample app demonstrates how to use the Azure Active Directory via Python to
 ## Installation instructions:
 1. Install dependencies:
   * `pip install adalpython` OR `pip install -e adalpython` if you intend to make changes in the library
+  * `pip install Flask` . Visit http://flask.pocoo.org/docs/0.11/installation/ for more details
 2. Copy storagedb.dist.sqlite to storagedb.sqlite (in the same folder):
   * Your webserver needs to write to both the the storagedb.sqlite file and the samples folder, so ensure permissions are set to allow this.
 3. Copy config.dist.py to config.py (in the same folder).
@@ -26,15 +27,16 @@ Access the directory as the signed-in user
 Read directory data
 Sign in and read user profile.
 
-Change the constant TENANT in samples\sdsapi.php file
+Change the constant TENANT in samples\sdsapi.py file
 
-Construct the token class using \microsoft\aadphp\AAD\token using $client, $httpclient described above.
+Construct the token class using tokenhelper class.
 ```
-$token = new \microsoft\aadphp\AAD\token($access_token, $expires_on, $refresh_token, $scope, $resource, $client, $httpclient);
+ tokenhelper = token_helper(rawtoken)
+ token = tokenhelper.get_token()
 ```
 
-Construct sds api class using $token, $httpclient and $db instances.
+Construct sds api class.
 ```
-$sds = new \microsoft\aadphp\samples\sdsapi($token, $httpclient, $db, $userId);
+ sdsapiobj = sdsapi()
 ```
-Now you can access sdsapi using $sds object.
+Now you can access sdsapi using sdsapiobj object.
