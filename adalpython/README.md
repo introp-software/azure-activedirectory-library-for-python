@@ -10,6 +10,9 @@ To install this library:
 git clone git@github.com:AzureAD/azure-activedirectory-for-python.git
 ```
 
+To open this solution in Visual Studio, you will need Python Tools for Visual Studio. You can download it from [Here](https://www.visualstudio.com/en-us/features/python-vs.aspx)
+
+
 This library is mostly self-contained, however it uses unittest2 for unit testing, and flask for sample application. You need to install flask to run the sample application.
 
 To install flask:
