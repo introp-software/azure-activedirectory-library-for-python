@@ -23,6 +23,12 @@ $ pip install Flask
 
 ## Usage
 
+Install the library:
+
+```
+pip install /path/to/adalpython
+```
+
 Construct an httpclient object:
 ```
 httpclient = httpclient();

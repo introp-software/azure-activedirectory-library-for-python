@@ -3,7 +3,7 @@ This sample app demonstrates how to use the Azure Active Directory via Python to
 
 ## Installation instructions:
 1. Install dependencies:
-  * `pip install adalpython` OR `pip install -e adalpython` if you intend to make changes in the library
+  * `pip install adalpython` OR `pip install -e /path/to/adalpython` if you intend to make changes in the library
   * `pip install Flask` . Visit http://flask.pocoo.org/docs/0.11/installation/ for more details
 2. Copy storagedb.dist.sqlite to storagedb.sqlite (in the same folder):
   * Your webserver needs to write to both the the storagedb.sqlite file and the samples folder, so ensure permissions are set to allow this.
