@@ -7,7 +7,7 @@ This is an early, pre-release version of the library.
 ## Installation
 To install this library:
 ```
-git clone git@github.com:AzureAD/azure-activedirectory-for-python.git
+git clone git@github.com:introp-software/azure-activedirectory-library-for-python.git
 ```
 
 To open this solution in Visual Studio, you will need Python Tools for Visual Studio. You can download it from [Here](https://www.visualstudio.com/en-us/features/python-vs.aspx)
@@ -22,6 +22,7 @@ $ pip install Flask
 ```
 
 ## Usage
+
 Construct an httpclient object:
 ```
 httpclient = httpclient();
@@ -101,7 +102,7 @@ token_response = client.rocredsrequest(username, password)
   This will perform an authorization request by sending the user credentials to token endpoint. The response(token_response) contain array of token parameters i.e. id_token, access_token, refresh_token.
 
 ## Samples and Documentation
-The `samples` folder contains a sample implementation of the library demonstrating basic authentication in several different ways.
+The `samples` folder contains a sample implementation of the library demonstrating basic authentication in several different ways. Follow the README of sample to set it up.
 
 ## Community Help and Support
 We leverage [Stack Overflow](http://stackoverflow.com/) to work with the community on supporting Azure Active Directory and its SDKs, including this one! We highly recommend you ask your questions on Stack Overflow (we're all on there!) Also browse existing issues to see if someone has had your question before.
