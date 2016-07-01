@@ -35,12 +35,12 @@ class sdsapi(object):
      response = {}
      response['success'] = False
      if (token is None):
-       response['value'] = "The access token to fetch sds data may be expired or not present.Please login through Microsoft account using method Auth Code or Credentials."
+       response['value'] = "Either SDS data is not available or the access token to fetch sds data may be expired or not present. Please try to login through Microsoft account using method Auth Code or Credentials."
        return response
      tokenhelper = token_helper(token)     
      token = tokenhelper.get_token()
      if (token is None):
-       response['value'] = "The access token to fetch sds data may be expired or not present.Please login through Microsoft account using method Auth Code or Credentials."
+       response['value'] = "Either SDS data is not available or the access token to fetch sds data may be expired or not present. Please try to login through Microsoft account using method Auth Code or Credentials."
        return response
      else:
       options = {}
