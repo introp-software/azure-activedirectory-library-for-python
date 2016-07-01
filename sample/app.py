@@ -103,6 +103,7 @@ def my_form_post():
         session['firstname'] =  firstname
         session['lastname']= lastname
         session['email'] = email
+        session.logged_in = True
         return render_template('User.html')
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1}"
@@ -225,7 +226,7 @@ def locallogin():
      read_configuration()
      username = request.form["localemail"]
      password = request.form["localpassword"]     
-     storage = app_storages()
+     storage = app_storage()
      logged_in_user = storage.login_user(storage_location,username,password)
      try:
       ad_user = storage.get_ad_user(storage_location,logged_in_user[4])
@@ -233,7 +234,7 @@ def locallogin():
       ad_user = None
 
      sdsapiobj = sdsapi()
-     sdsresponse = sdsapiobj.getschoollist(tokendetails)
+     sdsresponse = sdsapiobj.getschoollist(None)
      session['sdsresponse'] = sdsresponse
      session['firstname'] =  logged_in_user[2]
      session['lastname']= logged_in_user[3]
