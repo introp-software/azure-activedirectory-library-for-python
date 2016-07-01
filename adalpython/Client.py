@@ -24,7 +24,6 @@
 from .httpclient import httpclient
 import jwt
 import urllib
-import webbrowser
 from urllib.parse import unquote, urlparse, urlencode, ParseResult, parse_qsl
 import json
 from adalpython import argument
@@ -65,7 +64,7 @@ class Client(object):
          url = self.add_url_params(url,params)
         except Exception as ex:
          return ex.args[0]
-        webbrowser.open(url)
+        return url
 
     ''' Handle auth response.
       Args:

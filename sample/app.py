@@ -21,7 +21,7 @@
  # @author Prasanna Mategaonkar <prasanna@introp.net>
  # @license MIT
  # @copyright (C) 2016 onwards Microsoft Corporation (http://microsoft.com/)
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session,redirect,url_for
 import json
 from flask import current_app
 from localuser import user
@@ -205,8 +205,8 @@ def get_token_using_code():
     client.set_redirecturi(redirect_uri)
     client.set_resource(resource)
     client.set_storage_location(storage_location)
-    client.authrequest('code',promptUserToLogin)
-    return  render_template("PlaceHolder.html")
+    url = client.authrequest('code',promptUserToLogin)
+    return  redirect(url, code=302)
 
 @app.route("/hybrid", methods= ["POST"])
 def get_token_using_code_id_token():
@@ -217,8 +217,8 @@ def get_token_using_code_id_token():
     client.set_redirecturi(redirect_uri)
     client.set_resource(resource)    
     client.set_storage_location(storage_location)
-    client.authrequest('code id_token',promptUserToLogin)
-    return  render_template("PlaceHolder.html")
+    url = client.authrequest('code id_token',promptUserToLogin)
+    return  redirect(url, code=302)
 
 @app.route("/locallogin", methods = ["POST"])
 def locallogin():
@@ -259,7 +259,8 @@ def linkaccount():
      client.set_resource(resource)
      client.set_storage_location(storage_location)
      stateparam = [email]
-     client.authrequest('code',promptUserToLogin,stateparam)
+     url = client.authrequest('code',promptUserToLogin,stateparam)
+     return  redirect(url, code=302)
     except Exception as ex:
      template = "An exception of type {0} occurred. Arguments:\n{1}"
      message = template.format(type(ex).__name__, ex.args)
