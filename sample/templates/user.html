@@ -113,6 +113,15 @@
                 {{ session['sdsresponse']['value']['Education_State'] }}                
             </div>
         </div>
+        {% else %}
+        <div class="row">
+            <div class="col-md-2">
+                Note :
+            </div>
+            <div class="col-md-4">
+                {{ session['sdsresponse']['value'] }}
+            </div>
+        </div>
         {% endif %}
      </div>
 </div>
