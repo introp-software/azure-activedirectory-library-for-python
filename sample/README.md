@@ -14,10 +14,11 @@ This sample app demonstrates how to use the Azure Active Directory via Python to
   1. The redirect URI will be the URI that points to the authcode, for example "http://example.com/src/samples/authcode". This will depend on your environment.
   2. The redirect URI entered in the config.py and in the Azure management portal must match exactly.
 5. Set the `sample` project as default project in the solution.
-6. Visit the root in your browser, for example http://localhost:5000/.
-7. Sign up using the email address for an existing Azure AD user. This will create a local account for that user.
-8. Link that local account to the appropriate Azure AD account by clicking on the "Link" link on the user's home page that shows up when you sign in.
-9. Once the accounts are linked, there are four options to demonstrate authentication flows:
+6. You may have to setup the Python environment in your sample project as per your local setup. You can find more details about [Here](https://github.com/Microsoft/PTVS/wiki/Python-Environments)
+7. Visit the root in your browser, for example http://localhost:5000/.
+8. Sign up using the email address for an existing Azure AD user. This will create a local account for that user.
+9. Link that local account to the appropriate Azure AD account by clicking on the "Link" link on the user's home page that shows up when you sign in.
+10. Once the accounts are linked, there are four options to demonstrate authentication flows:
   1. Authorization code flow: This is the common 3 legged OAuth2 flow. This will redirect you to the Azure AD login page if you aren't already logged in to Azure AD and take you through the login process.
   2. Hybrid code flow: This is the quicker ID Token OAuth2 flow. This will redirect you to the Azure AD login page if you haven't already logged in to Azure AD and take you through the login process.
   3. Resource Owner Password Credentials Grant: This allows you to enter Azure AD login credentials directly in the login form and have authentication happen behind the scenes. You will not be redirected to Azure AD to log in.
