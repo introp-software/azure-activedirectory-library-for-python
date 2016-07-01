@@ -125,6 +125,9 @@ def register():
         localuser.Password = password
         storage = app_storage()
         user_id = storage.create_user(storage_location,localuser)
+        sdsapiobj = sdsapi()
+        sdsresponse = sdsapiobj.getschoollist(None)
+        session['sdsresponse'] = sdsresponse
         session['firstname'] =  firstname
         session['lastname']= lastname
         session['email'] = email
