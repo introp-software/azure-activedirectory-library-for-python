@@ -87,6 +87,7 @@
     <Content Include="templates\Login.html" />
     <Content Include="templates\Index.html" />
     <Content Include="templates\Layout.html" />
+    <Content Include="templates\PlaceHolder.html" />
     <Content Include="templates\User.html" />
   </ItemGroup>
   <ItemGroup>
