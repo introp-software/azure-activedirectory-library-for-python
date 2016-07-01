@@ -123,7 +123,7 @@ def register():
         localuser.FirstName = firstname
         localuser.LastName = lastname
         localuser.Password = password
-        storage = App_Storage()
+        storage = app_storage()
         user_id = storage.create_user(storage_location,localuser)
         session['firstname'] =  firstname
         session['lastname']= lastname
