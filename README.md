@@ -5,7 +5,7 @@ The AAD SDK for Python gives your application the full functionality of Microsof
 This is an early, pre-release version of the library.
 
 ## Installation
-To install this library:
+To get this library:
 ```
 git clone git@github.com:introp-software/azure-activedirectory-library-for-python.git
 ```
@@ -28,6 +28,8 @@ Install the library:
 ```
 pip install /path/to/adalpython
 ```
+
+Now library is ready for use. Following are some basic steps to use the library.
 
 Construct an httpclient object:
 ```

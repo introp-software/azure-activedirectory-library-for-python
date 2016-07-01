@@ -5,13 +5,15 @@ This sample app demonstrates how to use the Azure Active Directory via Python to
 1. Install dependencies:
   * `pip install adalpython` OR `pip install -e /path/to/adalpython` if you intend to make changes in the library
   * `pip install Flask` . Visit http://flask.pocoo.org/docs/0.11/installation/ for more details
+  * `pip install requests`.
+  * `pip install PyJWT`.
 2. Copy storagedb.dist.sqlite to storagedb.sqlite (in the same folder):
   * Your webserver needs to write to both the the storagedb.sqlite file and the samples folder, so ensure permissions are set to allow this.
 3. Copy config.dist.py to config.py (in the same folder).
 4. Edit config.py and enter your client ID, client secret, and redirect URI.
   1. The redirect URI will be the URI that points to the authcode, for example "http://example.com/src/samples/authcode". This will depend on your environment.
   2. The redirect URI entered in the config.py and in the Azure management portal must match exactly.
-5. Set the sample project as default project in the solution.
+5. Set the `sample` project as default project in the solution.
 6. Visit the root in your browser, for example http://localhost:5000/.
 7. Sign up using the email address for an existing Azure AD user. This will create a local account for that user.
 8. Link that local account to the appropriate Azure AD account by clicking on the "Link" link on the user's home page that shows up when you sign in.
