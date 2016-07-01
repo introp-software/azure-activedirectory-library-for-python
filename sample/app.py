@@ -304,10 +304,12 @@ def linkaccountresponse():
      session.logged_in = True
      return render_template('User.html',aduser=ad_userobj)
     else:
+     session.logged_in = True
      return render_template('User.html',error = "Your O365 email does not match with your current email id.")
    except Exception as ex:
     template = "An exception of type {0} occurred. Arguments:\n{1}"
     message = template.format(type(ex).__name__, ex.args)
+    session.logged_in = True
     return render_template('User.html', error = message)
 
 @app.route("/unlink", methods = ["POST"])
@@ -316,6 +318,7 @@ def unlinkaccount():
     read_configuration()
     app_storage = App_Storage()
     app_storage.delink_user(storage_location,email)
+    session.logged_in = True
     return render_template('User.html')
 
 
