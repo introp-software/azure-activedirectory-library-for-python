@@ -206,7 +206,7 @@ def get_token_using_code():
     client.set_resource(resource)
     client.set_storage_location(storage_location)
     client.authrequest('code',promptUserToLogin)
-    return  "PlaceHolder.html"
+    return  render_template("PlaceHolder.html")
 
 @app.route("/hybrid", methods= ["POST"])
 def get_token_using_code_id_token():
@@ -218,7 +218,7 @@ def get_token_using_code_id_token():
     client.set_resource(resource)    
     client.set_storage_location(storage_location)
     client.authrequest('code id_token',promptUserToLogin)
-    return  "PlaceHolder.html"
+    return  render_template("PlaceHolder.html")
 
 @app.route("/locallogin", methods = ["POST"])
 def locallogin():
